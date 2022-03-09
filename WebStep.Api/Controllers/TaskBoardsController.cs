@@ -7,14 +7,14 @@ namespace WebStep.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TaskBoardController : ControllerBase
+    public class TaskBoardsController : ControllerBase
     {
-        private readonly ILogger<TaskBoardController> _logger;
+        private readonly ILogger<TaskBoardsController> _logger;
         private readonly IMapper _mapper;
         private readonly ITaskBoardRepo _taskBoardRepo;
 
-        public TaskBoardController(
-            ILogger<TaskBoardController> logger,
+        public TaskBoardsController(
+            ILogger<TaskBoardsController> logger,
             IMapper mapper,
             ITaskBoardRepo taskBoard)
         {
