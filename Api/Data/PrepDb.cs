@@ -14,6 +14,7 @@ namespace Api.Data
             if (context == null)
                 return;
 
+            Migrate(context);
             SeedData(context);
         }
 
