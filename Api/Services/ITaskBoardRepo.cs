@@ -2,7 +2,7 @@
 {
     public interface ITaskBoardRepo
     {
-        public IEnumerable<Entities.TaskBoard> GetAllTaskBoards();
+        public Task<List<Entities.TaskBoard>> GetAllTaskBoardsAsync();
         public Task<Entities.TaskBoard> GetTaskBoardByIdAsync(int id);
     }
 }

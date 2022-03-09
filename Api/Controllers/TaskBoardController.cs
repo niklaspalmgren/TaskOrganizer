@@ -24,17 +24,17 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<TaskBoardDto>> GetAllTaskBoards()
+        public async Task<ActionResult<List<TaskBoardDto>>> GetAllTaskBoards()
         {
-            var taskBoards = _taskBoardRepo.GetAllTaskBoards();
+            var taskBoards = await _taskBoardRepo.GetAllTaskBoardsAsync();
 
-            var taskBoardDtos = _mapper.Map<IEnumerable<TaskBoardDto>>(taskBoards);
+            var taskBoardDtos = _mapper.Map<List<Entities.TaskBoard>, List<TaskBoardDto>>(taskBoards);
 
             return Ok(taskBoardDtos);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<List<TaskBoardDto>>> GetTaskBoardByIdAsync(int id)
+        public async Task<ActionResult<TaskBoardDto>> GetTaskBoardByIdAsync(int id)
         {
             var taskBoard = await _taskBoardRepo.GetTaskBoardByIdAsync(id);
 

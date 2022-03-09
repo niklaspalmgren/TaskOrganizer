@@ -12,9 +12,9 @@ namespace Api.Services
             _context = context;
         }
 
-        public IEnumerable<Entities.TaskBoard> GetAllTaskBoards()
+        public async Task<List<Entities.TaskBoard>> GetAllTaskBoardsAsync()
         {
-            var tasks = _context.TaskBoards.Include(x => x.Tasks);
+            var tasks = await _context.TaskBoards.Include(x => x.Tasks).ToListAsync();
             return tasks;
         }
 
