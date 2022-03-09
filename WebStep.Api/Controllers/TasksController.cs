@@ -1,9 +1,9 @@
-using Api.Dtos;
-using Api.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using WebStep.Api.Services;
+using WebStep.Dto;
 
-namespace Api.Controllers;
+namespace WebStep.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

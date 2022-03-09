@@ -1,7 +1,7 @@
-﻿using Api.Dtos;
-using AutoMapper;
+﻿using AutoMapper;
+using WebStep.Dto;
 
-namespace Api.Profiles
+namespace WebStep.Api.Profiles
 {
     public class TasksProfile : Profile
     {

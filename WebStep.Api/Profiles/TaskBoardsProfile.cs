@@ -1,8 +1,8 @@
-﻿using Api.Dtos;
-using Api.Entities;
-using AutoMapper;
+﻿using AutoMapper;
+using WebStep.Api.Entities;
+using WebStep.Dto;
 
-namespace Api.Profiles
+namespace WebStep.Api.Profiles
 {
     public class TaskBoardsProfile : Profile
     {

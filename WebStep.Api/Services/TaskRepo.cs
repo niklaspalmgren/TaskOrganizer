@@ -1,6 +1,6 @@
-﻿using Api.Data;
+﻿using WebStep.Api.Data;
 
-namespace Api.Services
+namespace WebStep.Api.Services
 {
     public class TaskRepo : ITaskRepo
     {

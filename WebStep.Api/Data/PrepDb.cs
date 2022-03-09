@@ -1,7 +1,7 @@
-﻿using Api.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using WebStep.Api.Entities;
 
-namespace Api.Data
+namespace WebStep.Api.Data
 {
     public static class PrepDb
     {
@@ -65,7 +65,7 @@ namespace Api.Data
                 context.SaveChanges();
             }
 
-            
+
 
         }
     }

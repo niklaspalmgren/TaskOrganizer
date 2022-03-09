@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Api.Data
+namespace WebStep.Api.Data
 {
     public class TasksDataContext : DbContext
     {

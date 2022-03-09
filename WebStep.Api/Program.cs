@@ -1,6 +1,6 @@
-using Api.Data;
-using Api.Services;
 using Microsoft.EntityFrameworkCore;
+using WebStep.Api.Data;
+using WebStep.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

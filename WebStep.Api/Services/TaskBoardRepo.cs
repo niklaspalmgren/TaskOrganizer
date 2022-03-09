@@ -1,7 +1,8 @@
-﻿using Api.Data;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using WebStep.Api.Data;
+using WebStep.Api.Entities;
 
-namespace Api.Services
+namespace WebStep.Api.Services
 {
     public class TaskBoardRepo : ITaskBoardRepo
     {
@@ -12,13 +13,13 @@ namespace Api.Services
             _context = context;
         }
 
-        public async Task<List<Entities.TaskBoard>> GetAllTaskBoardsAsync()
+        public async Task<List<TaskBoard>> GetAllTaskBoardsAsync()
         {
             var tasks = await _context.TaskBoards.Include(x => x.Tasks).ToListAsync();
             return tasks;
         }
 
-        public async Task<Entities.TaskBoard> GetTaskBoardByIdAsync(int id)
+        public async Task<TaskBoard> GetTaskBoardByIdAsync(int id)
         {
             var task = await _context.TaskBoards.FindAsync(id);
             return task;

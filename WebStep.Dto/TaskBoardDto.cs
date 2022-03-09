@@ -1,4 +1,6 @@
-﻿namespace Api.Dtos
+﻿using System.Collections.Generic;
+
+namespace WebStep.Dto
 {
     public class TaskBoardDto
     {
