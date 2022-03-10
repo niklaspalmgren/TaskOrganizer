@@ -1,0 +1,24 @@
+﻿@using WebStep.Dto
+@using webStep.AppServer.Data
+
+
+<div class="container">
+
+    <div class="row gy-2">
+        <h4 class="task-board-title">@TaskBoard.Name</h4>
+    </div>
+
+    @foreach (var task in TaskBoard.Tasks)
+    {
+        <div class="row gy-2 mb-3">
+            <div class="col">
+                <TaskComponent Name="@task.Name" Description="@task.Description" />
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public TaskBoardDto TaskBoard { get; set; }
+}

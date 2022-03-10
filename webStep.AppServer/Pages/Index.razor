@@ -1,0 +1,35 @@
+﻿@page "/"
+@using WebStep.Dto
+@using webStep.AppServer.Data
+@inject ITaskBoardService taskBoardService;
+
+<PageTitle>Index</PageTitle>
+
+<div class="container">
+    <div class="row ms-auto gy-4">
+        <div class="col mb-4">
+            <button class="btn btn-primary">
+                New board
+            </button>
+        </div>
+    </div>
+
+    <div class="row gy-4">
+        @foreach (var board in taskBoards)
+        {
+            <div class="col">
+                <TaskBoardComponent TaskBoard="@board" />
+            </div>
+        }
+    </div>
+</div>
+
+
+@code {
+    private List<TaskBoardDto> taskBoards = new List<TaskBoardDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        taskBoards = await taskBoardService.GetAllTaskBoardsAsync();
+    }
+}

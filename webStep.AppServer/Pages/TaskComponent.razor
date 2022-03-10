@@ -1,0 +1,14 @@
+﻿<div class="card task shadow">
+  <div class="card-body">
+    <h5 class="card-title">@Name</h5>
+    <p class="card-text">@Description</p>
+  </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Name { get; set; }
+
+    [Parameter]
+    public string Description { get; set; }
+}
