@@ -34,16 +34,44 @@ public class TasksController : ControllerBase
         return Ok(taskDtos);
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<TaskDto>> GetTaskByIdAsync(int id)
+    [HttpGet("{id}", Name = "GetTaskById")]
+    public ActionResult<TaskDto> GetTaskById(int id)
     {
-        var taskItem = await _taskRepo.GetTaskByIdAsync(id);
+        var taskItem = _taskRepo.GetTaskById(id);
 
-        if (taskItem is null)
+        if (taskItem == null)
             return NotFound();
 
         var taskDto = _mapper.Map<TaskDto>(taskItem);
 
         return Ok(taskDto);
+    }
+
+    [HttpPost]
+    public ActionResult<TaskDto> CreateTask(TaskDto dto)
+    {
+        var task = _mapper.Map<Entities.Task>(dto);
+
+        _taskRepo.CreateTask(task);
+        _taskRepo.SaveChanges();
+
+        var taskDto = _mapper.Map<TaskDto>(task);
+
+        return CreatedAtRoute(nameof(GetTaskById), new { Id = taskDto.Id }, taskDto);
+    }
+
+
+    [HttpDelete("{id}")]
+    public ActionResult DeleteTask(int id)
+    {
+        var taskEntityFromRepo = _taskRepo.GetTaskById(id);
+
+        if (taskEntityFromRepo == null)
+            return NotFound();
+
+        _taskRepo.DeleteTask(taskEntityFromRepo);
+        _taskRepo.SaveChanges();
+
+        return NoContent();
     }
 }

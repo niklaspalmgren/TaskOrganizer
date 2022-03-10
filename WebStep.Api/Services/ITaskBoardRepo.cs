@@ -1,8 +1,15 @@
-﻿namespace WebStep.Api.Services
+﻿using WebStep.Api.Entities;
+
+namespace WebStep.Api.Services
 {
     public interface ITaskBoardRepo
     {
-        public Task<List<Entities.TaskBoard>> GetAllTaskBoardsAsync();
-        public Task<Entities.TaskBoard> GetTaskBoardByIdAsync(int id);
+        public IEnumerable<TaskBoard> GetAllTaskBoards();
+        public TaskBoard GetTaskBoardById(int id);
+        public void CreateTaskBoard(TaskBoard taskBoard);
+        public void UpdateTaskBoard(TaskBoard taskBoard);
+        public void DeleteTaskBoardAndRelatedTasks(TaskBoard taskBoard);
+        public void SaveChanges();
+        
     }
 }

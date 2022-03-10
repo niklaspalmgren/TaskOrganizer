@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using WebStep.Api.Entities;
 using WebStep.Api.Services;
 using WebStep.Dto;
 
@@ -24,26 +25,53 @@ namespace WebStep.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<TaskBoardDto>>> GetAllTaskBoards()
+        public ActionResult<IEnumerable<TaskBoardDto>> GetAllTaskBoards()
         {
-            var taskBoards = await _taskBoardRepo.GetAllTaskBoardsAsync();
+            var taskBoardsFromRepo = _taskBoardRepo.GetAllTaskBoards();
 
-            var taskBoardDtos = _mapper.Map<List<Entities.TaskBoard>, List<TaskBoardDto>>(taskBoards);
+            var taskBoardDtos = _mapper.Map<IEnumerable<TaskBoard>, IEnumerable<TaskBoardDto>>(taskBoardsFromRepo);
 
             return Ok(taskBoardDtos);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TaskBoardDto>> GetTaskBoardByIdAsync(int id)
+        [HttpGet("{id}", Name = "GetTaskBoardById")]
+        public ActionResult<TaskBoardDto> GetTaskBoardById(int id)
         {
-            var taskBoard = await _taskBoardRepo.GetTaskBoardByIdAsync(id);
+            var taskBoardFromRepo = _taskBoardRepo.GetTaskBoardById(id);
 
-            if (taskBoard is null)
-                return BadRequest("No task board found.");
+            if (taskBoardFromRepo is null)
+                return NotFound();
 
-            var taskBoardDto = _mapper.Map<TaskBoardDto>(taskBoard);
+            var taskBoardDto = _mapper.Map<TaskBoardDto>(taskBoardFromRepo);
 
             return Ok(taskBoardDto);
+        }
+
+        [HttpPost]
+        public ActionResult<TaskBoardDto> CreateTaskBoard(TaskBoardDto dto)
+        {
+            var taskBoard = _mapper.Map<TaskBoard>(dto);
+
+            _taskBoardRepo.CreateTaskBoard(taskBoard);
+            _taskBoardRepo.SaveChanges();
+
+            var returnDto = _mapper.Map<TaskBoardDto>(taskBoard);
+
+            return CreatedAtRoute(nameof(GetTaskBoardById), new {Id = returnDto.Id}, returnDto);
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult DeleteTaskBoardAndRelatedTasks(int id)
+        {
+            var taskBoardEntityFromRepo = _taskBoardRepo.GetTaskBoardById(id);
+
+            if (taskBoardEntityFromRepo == null)
+                return NotFound();
+
+            _taskBoardRepo.DeleteTaskBoardAndRelatedTasks(taskBoardEntityFromRepo);
+            _taskBoardRepo.SaveChanges();
+
+            return NoContent();
         }
     }
 }

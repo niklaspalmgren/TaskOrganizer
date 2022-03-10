@@ -45,24 +45,32 @@ namespace WebStep.Api.Data
 
             if (!context.Tasks.Any())
             {
-                var tasks = new List<Entities.Task>()
+
+                var taskBoard = context.TaskBoards.First();
+
+                if (taskBoard != null)
+                {
+                    var tasks = new List<Entities.Task>()
                     {
                         new Entities.Task()
                         {
                             Name = "Task 1",
                             Description = "The first task.",
-                            TaskBoardId = context.TaskBoards.FirstOrDefault()?.Id
+                            TaskBoardId = taskBoard.Id,
                         },
                         new Entities.Task()
                         {
                             Name = "Task 2",
                             Description = "The second task.",
-                            TaskBoardId = context.TaskBoards.FirstOrDefault()?.Id
+                            TaskBoardId = taskBoard.Id
                         },
                     };
 
-                context.Tasks.AddRange(tasks);
-                context.SaveChanges();
+                    context.Tasks.AddRange(tasks);
+                    context.SaveChanges();
+                }
+
+
             }
 
 

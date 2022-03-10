@@ -11,16 +11,42 @@ namespace WebStep.Api.Services
             _context = context;
         }
 
+        
         public IEnumerable<Entities.Task> GetAllTasks()
         {
             var tasks = _context.Tasks;
             return tasks;
         }
 
-        public async Task<Entities.Task> GetTaskByIdAsync(int id)
+        public Entities.Task GetTaskById(int id)
         {
-            var task = await _context.Tasks.FindAsync(id);
+            var task = _context.Tasks.Find(id);
             return task;
+        }
+
+        public void CreateTask(Entities.Task task)
+        {
+            if (task == null)
+                throw new ArgumentNullException(nameof(task));
+
+            _context.Tasks.Add(task);
+        }
+
+        public void DeleteTask(Entities.Task task)
+        {
+            if (task == null)
+                throw new ArgumentNullException(nameof(task));
+
+            _context.Tasks.Remove(task);
+        }
+
+        public void SaveChanges()
+        {
+            _context.SaveChanges();
+        }
+
+        public void UpdateTask(Entities.Task task)
+        {
         }
     }
 }

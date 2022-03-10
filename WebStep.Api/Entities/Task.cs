@@ -16,6 +16,7 @@ public class Task
     [MaxLength(200)]
     public string Description { get; set; } = string.Empty;
 
-    public int? TaskBoardId { get; set; }
+    [Required]
+    public int TaskBoardId { get; set; }
 
 }
