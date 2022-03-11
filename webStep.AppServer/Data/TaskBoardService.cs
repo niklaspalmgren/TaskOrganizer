@@ -29,6 +29,14 @@ namespace webStep.AppServer.Data
             return createdTaskBoard;
         }
 
+        public async Task UpdateTaskBoardAsync(TaskBoardDto taskBoardDto)
+        {
+            var httpClient = _clientFactory.CreateClient("TaskBoards");
+            var uri = $"{taskBoardDto.Id}";
+
+            await httpClient.PutAsJsonAsync(uri, taskBoardDto);
+        }
+
         public async Task DeleteTaskBoardAsync(TaskBoardDto taskBoardDto)
         {
             var httpClient = _clientFactory.CreateClient("TaskBoards");

@@ -1,10 +1,12 @@
 ﻿@using WebStep.Dto
+@using webStep.AppServer.Data
+@inject ITaskService taskService;
 
 @if (_inEditMode)
 {
     <div class="card task shadow">
         <div class="card-body">
-            <EditForm Model="@_editedTask" OnValidSubmit="@HandleValidSubmitAsync">
+            <EditForm Model="@_editedTask" OnValidSubmit="@UpdateTaskAsync">
                 <DataAnnotationsValidator />
                 <ValidationSummary />
 
@@ -44,7 +46,7 @@
 
             <div class="form-group gx-2 row mt-2">
                 <div class="col">
-                    <button type="button" class="btn btn-danger form-control">Delete</button>
+                    <button type="button" @onclick="@DeleteTaskAsync" class="btn btn-danger form-control">Delete</button>
                 </div>
                 <div class="col">
                     <button type="button" @onclick="@CancelEdit" class="btn btn-outline-light form-control">Cancel</button>
@@ -74,6 +76,12 @@ else
     public TaskDto Task { get; set; } = new TaskDto();
 
     [Parameter]
+    public EventCallback<TaskDto> OnDeleted { get; set; }
+
+    [Parameter]
+    public EventCallback<TaskDto> OnUpdated { get; set; }
+
+    [Parameter]
     public List<TaskBoardDto> TaskBoards { get; set; } = new List<TaskBoardDto>();
 
     private TaskDto _editedTask { get; set; } = new TaskDto();
@@ -95,13 +103,20 @@ else
         _inEditMode = false;
     }
 
-    private async Task HandleValidSubmitAsync()
+    private async Task DeleteTaskAsync()
+    {
+        await taskService.DeleteTaskAsync(Task);
+        await OnDeleted.InvokeAsync(Task);
+    }
+
+    private async Task UpdateTaskAsync()
     {
         Task.Name = _editedTask.Name;
         Task.Description = _editedTask.Description;
         Task.TaskBoardId = _editedTask.TaskBoardId;
 
-        // Update db
+        await taskService.UpdateTaskAsync(Task);
+        await OnUpdated.InvokeAsync(Task);
 
         CancelEdit();
     }

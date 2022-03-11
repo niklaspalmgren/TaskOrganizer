@@ -28,5 +28,21 @@ namespace webStep.AppServer.Data
 
             return createdTask;
         }
+
+        public async Task UpdateTaskAsync(TaskDto taskDto)
+        {
+            var httpClient = _clientFactory.CreateClient("Tasks");
+            var uri = $"{taskDto.Id}";
+
+            await httpClient.PutAsJsonAsync(uri, taskDto);
+        }
+
+        public async Task DeleteTaskAsync(TaskDto taskDto)
+        {
+            var httpClient = _clientFactory.CreateClient("Tasks");
+            var uri = $"{taskDto.Id}";
+
+            await httpClient.DeleteAsync(uri);
+        }
     }
 }

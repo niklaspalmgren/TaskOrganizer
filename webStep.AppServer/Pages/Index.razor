@@ -12,7 +12,7 @@
         @foreach (var board in taskBoards)
         {
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                <TaskBoardComponent TaskBoards="@taskBoards" TaskBoard="@board" OnDeleted="@OnTaskBoardDeleted" />
+                <TaskBoardComponent TaskBoards="@taskBoards" TaskBoard="@board" OnDeleted="@OnTaskBoardDeleted" TaskUpdated="@OnTaskUpdated" />
             </div>
         }
 
@@ -35,6 +35,19 @@
     {
         var toRemove = taskBoards.FirstOrDefault(x => x == taskBoardDto);
         taskBoards.Remove(toRemove);
+    }
+
+    private void OnTaskUpdated(TaskDto taskDto)
+    {
+        AddTaskToTaskBoard(taskDto);
+    }
+
+    private void AddTaskToTaskBoard(TaskDto taskDto)
+    {
+        var taskBoard = taskBoards.FirstOrDefault(x => x.Id == taskDto.TaskBoardId);
+
+        if (taskBoard != null)
+            taskBoard.Tasks.Add(taskDto);
     }
 
     private void OnNewTaskBoardCreated(TaskBoardDto taskBoardDto)

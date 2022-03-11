@@ -38,7 +38,7 @@
     {
         <div class="row gy-2 mb-3">
             <div class="col">
-                <TaskComponent Task="@task" TaskBoards="@TaskBoards" />
+                <TaskComponent Task="@task" TaskBoards="@TaskBoards" OnUpdated="@OnTaskUpdated" OnDeleted="@OnTaskDeleted" />
             </div>
         </div>
     }
@@ -50,12 +50,16 @@
 
 @code {
     [Parameter]
+    
     public TaskBoardDto TaskBoard { get; set; } = new TaskBoardDto();
     [Parameter]
     public List<TaskBoardDto> TaskBoards { get; set; } = new List<TaskBoardDto>();
 
     [Parameter]
     public EventCallback<TaskBoardDto> OnDeleted { get; set; }
+
+    [Parameter]
+    public EventCallback<TaskDto> TaskUpdated { get; set; }
 
     private bool IsNewTaskControlVisible { get; set; } = false;
 
@@ -69,6 +73,27 @@
     private void OnNewTaskCancel()
     {
         IsNewTaskControlVisible = false;
+    }
+
+    private async Task OnTaskUpdated(TaskDto taskDto)
+    {
+        RemoveTaskFromTaskBoard(taskDto);
+        await TaskUpdated.InvokeAsync(taskDto);
+    }
+
+    private void OnTaskDeleted(TaskDto taskDto)
+    {
+        RemoveTaskFromTaskBoard(taskDto);
+    }
+
+    
+
+    private void RemoveTaskFromTaskBoard(TaskDto taskDto)
+    {
+        var task = TaskBoard.Tasks.FirstOrDefault(x => x.Id == taskDto.Id);
+
+        if (task != null)
+            TaskBoard.Tasks.Remove(task);
     }
 
     private async Task OnDeleteClickedAsync()

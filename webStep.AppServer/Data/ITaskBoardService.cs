@@ -6,6 +6,7 @@ namespace webStep.AppServer.Data
     {
         Task<List<TaskBoardDto>> GetAllTaskBoardsAsync();
         Task<TaskBoardDto> CreateTaskBoardAsync(TaskBoardDto taskDto);
+        Task UpdateTaskBoardAsync(TaskBoardDto taskDto);
         Task DeleteTaskBoardAsync(TaskBoardDto taskDto);
     }
 }
