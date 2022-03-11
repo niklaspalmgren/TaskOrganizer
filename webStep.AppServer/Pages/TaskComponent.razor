@@ -1,14 +1,108 @@
-﻿<div class="card task shadow">
-  <div class="card-body">
-    <h5 class="card-title">@Name</h5>
-    <p class="card-text">@Description</p>
-  </div>
+﻿@using WebStep.Dto
+
+@if (_inEditMode)
+{
+    <div class="card task shadow">
+        <div class="card-body">
+            <EditForm Model="@_editedTask" OnValidSubmit="@HandleValidSubmitAsync">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="form-group row">
+                    <label class="col-form-label">Name</label>
+                    <div class="col">
+                        <InputText @bind-Value="_editedTask.Name" class="form-control" />
+                    </div>
+
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-form-label">Description</label>
+                    <div class="col">
+                        <InputTextArea @bind-Value="_editedTask.Description" class="form-control" />
+                    </div>
+
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-form-label">Board</label>
+                    <div class="col">
+                        <InputSelect @bind-Value="_editedTask.TaskBoardId" class="form-select">
+                            @foreach (var board in TaskBoards)
+                            {
+                            <option value="@board.Id">@board.Name</option>
+                            }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="form-group row mt-4">
+                <div class="col">
+                    <button type="submit" class="btn btn-success form-control">Update</button>
+                </div>
+            </div>
+
+            <div class="form-group gx-2 row mt-2">
+                <div class="col">
+                    <button type="button" class="btn btn-danger form-control">Delete</button>
+                </div>
+                <div class="col">
+                    <button type="button" @onclick="@CancelEdit" class="btn btn-outline-light form-control">Cancel</button>
+                </div>
+            </div>
+
+
+        </EditForm>
+    </div>
 </div>
+}
+else
+{
+    <div class="card task shadow" @onclick="@EnterEditMode">
+        <div class="card-body">
+            <h5 class="card-title">@Task.Name</h5>
+            <p class="card-text">@Task.Description</p>
+        </div>
+    </div>
+}
+
+
+
 
 @code {
     [Parameter]
-    public string Name { get; set; }
+    public TaskDto Task { get; set; } = new TaskDto();
 
     [Parameter]
-    public string Description { get; set; }
+    public List<TaskBoardDto> TaskBoards { get; set; } = new List<TaskBoardDto>();
+
+    private TaskDto _editedTask { get; set; } = new TaskDto();
+    private bool _inEditMode { get; set; }
+
+    private void EnterEditMode()
+    {
+        _editedTask = new TaskDto();
+        _editedTask.Name = Task.Name;
+        _editedTask.Description = Task.Description;
+        _editedTask.TaskBoardId = Task.TaskBoardId;
+
+        _inEditMode = true;
+    }
+
+    private void CancelEdit()
+    {
+        _editedTask = new TaskDto();
+        _inEditMode = false;
+    }
+
+    private async Task HandleValidSubmitAsync()
+    {
+        Task.Name = _editedTask.Name;
+        Task.Description = _editedTask.Description;
+        Task.TaskBoardId = _editedTask.TaskBoardId;
+
+        // Update db
+
+        CancelEdit();
+    }
 }

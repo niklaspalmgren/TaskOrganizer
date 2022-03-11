@@ -5,22 +5,20 @@
 
 <PageTitle>Index</PageTitle>
 
-<div class="container">
-    <div class="row ms-auto gy-4">
-        <div class="col mb-4">
-            <button class="btn btn-primary">
-                New board
-            </button>
-        </div>
-    </div>
+<div class="container mt-lg-6 mt-md-4 mt-sm-3 mt-xs-2">
 
     <div class="row gy-4">
+
         @foreach (var board in taskBoards)
         {
-            <div class="col">
-                <TaskBoardComponent TaskBoard="@board" />
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <TaskBoardComponent TaskBoards="@taskBoards" TaskBoard="@board" OnDeleted="@OnTaskBoardDeleted" />
             </div>
         }
+
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <NewTaskBoardComponent OnCreated="@OnNewTaskBoardCreated" />
+            </div>
     </div>
 </div>
 
@@ -31,5 +29,16 @@
     protected override async Task OnInitializedAsync()
     {
         taskBoards = await taskBoardService.GetAllTaskBoardsAsync();
+    }
+
+    private void OnTaskBoardDeleted(TaskBoardDto taskBoardDto)
+    {
+        var toRemove = taskBoards.FirstOrDefault(x => x == taskBoardDto);
+        taskBoards.Remove(toRemove);
+    }
+
+    private void OnNewTaskBoardCreated(TaskBoardDto taskBoardDto)
+    {
+        taskBoards.Add(taskBoardDto);
     }
 }

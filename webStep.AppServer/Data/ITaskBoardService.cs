@@ -5,5 +5,7 @@ namespace webStep.AppServer.Data
     public interface ITaskBoardService
     {
         Task<List<TaskBoardDto>> GetAllTaskBoardsAsync();
+        Task<TaskBoardDto> CreateTaskBoardAsync(TaskBoardDto taskDto);
+        Task DeleteTaskBoardAsync(TaskBoardDto taskDto);
     }
 }

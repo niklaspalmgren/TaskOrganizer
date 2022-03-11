@@ -6,15 +6,20 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-builder.Services.AddHttpClient<ITaskService, TaskService>(c =>
+// Http client configurations
+builder.Services.AddHttpClient("Tasks", c =>
 {
-    c.BaseAddress = new Uri("https://localhost:7060/");
+    c.BaseAddress = new Uri(builder.Configuration.GetValue<string>("TasksApiBaseUri"));
 });
 
-builder.Services.AddHttpClient<ITaskBoardService, TaskBoardService>(c =>
+builder.Services.AddHttpClient("TaskBoards", c =>
 {
-    c.BaseAddress = new Uri("https://localhost:7060/");
+    c.BaseAddress = new Uri(builder.Configuration.GetValue<string>("TaskBoardsApiBaseUri"));
 });
+
+builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddScoped<ITaskBoardService, TaskBoardService>();
+
 
 var app = builder.Build();
 

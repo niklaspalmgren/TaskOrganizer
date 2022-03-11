@@ -1,24 +1,88 @@
 ﻿@using WebStep.Dto
 @using webStep.AppServer.Data
+@inject ITaskService taskService;
+@inject ITaskBoardService taskBoardService;
 
 
 <div class="container">
 
-    <div class="row gy-2">
-        <h4 class="task-board-title">@TaskBoard.Name</h4>
+    <div class="row gy-2 mb-2 justify-content-between">
+        <div class="col-auto">
+            <h4 class="task-board-title">@TaskBoard.Name</h4>
+        </div>
+        <div class="col-auto">
+            <i class="fs-5 bi bi-trash delete-taskboard-button cursor-hand" @onclick="OnDeleteClickedAsync"></i>
+        </div>
     </div>
+
+    @if (IsNewTaskControlVisible)
+    {
+        <div class="row gy-2 mb-3" id="newTaskRow">
+            <div class="col">
+                <NewTaskComponent TaskBoardId="@TaskBoard.Id" OnCreated="@OnNewTaskCreatedAsync" OnCancel="@OnNewTaskCancel" />
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row gy-2 mb-3">
+            <div class="col d-grid">
+                <button class="btn btn-outline-primary" @onclick="@ShowAddNewTaskComponent">
+                    <i class="bi bi-plus-lg"></i> Add Task
+                </button>
+            </div>
+        </div>
+    }
 
     @foreach (var task in TaskBoard.Tasks)
     {
         <div class="row gy-2 mb-3">
             <div class="col">
-                <TaskComponent Name="@task.Name" Description="@task.Description" />
+                <TaskComponent Task="@task" TaskBoards="@TaskBoards" />
             </div>
         </div>
     }
+
+
+
+
 </div>
 
 @code {
     [Parameter]
-    public TaskBoardDto TaskBoard { get; set; }
+    public TaskBoardDto TaskBoard { get; set; } = new TaskBoardDto();
+    [Parameter]
+    public List<TaskBoardDto> TaskBoards { get; set; } = new List<TaskBoardDto>();
+
+    [Parameter]
+    public EventCallback<TaskBoardDto> OnDeleted { get; set; }
+
+    private bool IsNewTaskControlVisible { get; set; } = false;
+
+    private bool IsDeleteButtonVisible { get; set; }
+
+    private void ShowAddNewTaskComponent()
+    {
+        IsNewTaskControlVisible = true;
+    }
+
+    private void OnNewTaskCancel()
+    {
+        IsNewTaskControlVisible = false;
+    }
+
+    private async Task OnDeleteClickedAsync()
+    {
+        await taskBoardService.DeleteTaskBoardAsync(TaskBoard);
+        await OnDeleted.InvokeAsync(TaskBoard);
+    }
+
+    private async Task OnNewTaskCreatedAsync(TaskDto taskDto)
+    {
+        IsNewTaskControlVisible = false;
+
+        var createdTask = await taskService.CreateTaskAsync(taskDto);
+
+        TaskBoard.Tasks.Insert(0, createdTask);
+    }
 }

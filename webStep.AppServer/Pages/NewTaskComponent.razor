@@ -1,0 +1,63 @@
+﻿@using WebStep.Dto
+
+<div class="card task shadow">
+    <div class="card-body">
+        <EditForm Model="@Task" OnValidSubmit="@HandleValidSubmitAsync">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group row">
+                <label class="col-form-label">Name</label>
+                <div class="col">
+                    <InputText id="name" @bind-Value="Task.Name" class="form-control" />
+                </div>
+
+            </div>
+
+            <div class="form-group row">
+                <label class="col-form-label">Description</label>
+                <div class="col">
+                    <InputTextArea id="description" @bind-Value="Task.Description" class="form-control" />
+                </div>
+
+            </div>
+
+            <div class="form-group row mt-4">
+                <div class="col">
+                    <button type="submit" class="btn btn-success form-control">Add Task</button>
+                </div>
+                <div class="col">
+                    <button type="button" @onclick="@CancelAsync" class="btn btn-outline-light form-control">Cancel</button>
+                </div>
+            </div>
+
+
+        </EditForm>
+
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int TaskBoardId { get; set; }
+
+    [Parameter]
+    public TaskDto Task { get; set; } = new TaskDto();
+
+    [Parameter]
+    public EventCallback<TaskDto> OnCreated { get; set; }
+
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+
+    private async Task CancelAsync()
+    {
+        await OnCancel.InvokeAsync();
+    }
+
+    private async Task HandleValidSubmitAsync()
+    {
+        Task.TaskBoardId = TaskBoardId;
+        await OnCreated.InvokeAsync(Task);
+    }
+}

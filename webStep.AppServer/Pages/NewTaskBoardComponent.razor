@@ -1,0 +1,53 @@
+﻿@using WebStep.Dto
+@using webStep.AppServer.Data
+@inject ITaskBoardService taskBoardService;
+
+@if (InEditMode)
+{
+    <EditForm Model="@taskBoard" OnValidSubmit="@OnTaskBoardValidSumbitAsync" @onfocusout="@OnFormFocusOut">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="form-group row">
+            <div class="col">
+                <InputText id="name" @bind-Value="@taskBoard.Name" class="form-control" />
+            </div>
+        </div>
+    </EditForm>
+}
+else
+{
+    <div class="row gy-2 cursor-hand">
+        <h4 class="task-board-title" @onclick="@OnTitleClick">Add new board</h4>
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public EventCallback<TaskBoardDto> OnCreated { get; set; }
+
+    private TaskBoardDto taskBoard { get; set; } = new TaskBoardDto();
+
+    private bool InEditMode { get; set; }
+
+    private void OnTitleClick()
+    {
+        InEditMode = true;
+    }
+
+    private void OnFormFocusOut()
+    {
+        taskBoard.Name = string.Empty;
+        InEditMode = false;
+    }
+
+    private async Task OnTaskBoardValidSumbitAsync()
+    {
+        var createdTaskBoard = await taskBoardService.CreateTaskBoardAsync(taskBoard);
+        await OnCreated.InvokeAsync(createdTaskBoard);
+
+        taskBoard = new TaskBoardDto();
+        InEditMode = false;
+    }
+
+}

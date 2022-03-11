@@ -3,6 +3,9 @@
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     background-image: url("../Resources/bg.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: auto;
 }
 
 h1:focus {
@@ -13,20 +16,42 @@ a, .btn-link {
     color: #0071c1;
 }
 
+.cursor-hand {
+    cursor: pointer;
+}
+
 .task {
     background: #211944;
-    color: #d6d5dd; 
-    border-width: 0;
+    color: #d6d5dd;
+    border-color: #736e89;
 }
+
+    .task:hover {
+        border-color: #51e9c8;
+        cursor: pointer;
+    }
 
 .task-board-title {
     color: #ffffff;
 }
 
+.delete-taskboard-button {
+    color: #736e89;
+}
+
+    .delete-taskboard-button:hover {
+        color: #ad1276;
+    }
+
 .btn-primary {
     color: #fff;
     background-color: #47006c;
     border-color: #47006c;
+}
+
+.btn-outline-primary {
+    color: #736e89;
+    border-color: #736e89;
 }
 
 .content {
