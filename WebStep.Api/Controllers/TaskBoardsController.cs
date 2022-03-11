@@ -60,6 +60,21 @@ namespace WebStep.Api.Controllers
             return CreatedAtRoute(nameof(GetTaskBoardById), new {Id = returnDto.Id}, returnDto);
         }
 
+        [HttpPut("{id}")]
+        public ActionResult UpdateTaskBoard(int id, TaskBoardDto dto)
+        {
+            var taskBoardEntityFromRepo = _taskBoardRepo.GetTaskBoardById(id);
+
+            if (taskBoardEntityFromRepo == null)
+                return NotFound();
+
+            // Updates our entity from db context with values from our incomming dto
+            _mapper.Map(dto, taskBoardEntityFromRepo);
+            _taskBoardRepo.SaveChanges();
+
+            return NoContent();
+        }
+
         [HttpDelete("{id}")]
         public ActionResult DeleteTaskBoardAndRelatedTasks(int id)
         {

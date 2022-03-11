@@ -44,9 +44,5 @@ namespace WebStep.Api.Services
         {
             _context.SaveChanges();
         }
-
-        public void UpdateTask(Entities.Task task)
-        {
-        }
     }
 }

@@ -60,6 +60,21 @@ public class TasksController : ControllerBase
         return CreatedAtRoute(nameof(GetTaskById), new { Id = taskDto.Id }, taskDto);
     }
 
+    [HttpPut("{id}")]
+    public ActionResult UpdateTask(int id, TaskDto dto)
+    {
+        var taskEntityFromRepo = _taskRepo.GetTaskById(id);
+
+        if (taskEntityFromRepo == null)
+            return NotFound();
+
+        // Updates our entity from db context with values from our incomming dto
+        _mapper.Map(dto, taskEntityFromRepo);
+        _taskRepo.SaveChanges();
+
+        return NoContent();
+    }
+
 
     [HttpDelete("{id}")]
     public ActionResult DeleteTask(int id)

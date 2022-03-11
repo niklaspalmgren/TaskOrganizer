@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using WebStep.Api.Data;
 using WebStep.Api.Entities;
 
@@ -32,10 +31,6 @@ namespace WebStep.Api.Services
                 throw new ArgumentNullException(nameof(taskBoard));
 
             _context.TaskBoards.Add(taskBoard);
-        }
-
-        public void UpdateTaskBoard(TaskBoard dto)
-        {
         }
 
         public void DeleteTaskBoardAndRelatedTasks(TaskBoard taskBoard)

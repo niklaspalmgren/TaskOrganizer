@@ -8,7 +8,9 @@ namespace WebStep.Api.Profiles
         public TasksProfile()
         {
             CreateMap<Entities.Task, TaskDto>();
-            CreateMap<TaskDto, Entities.Task>();
+
+            // Could create seperate dto's for read/create/update etc.. but for simplicity sake.
+            CreateMap<TaskDto, Entities.Task>().ForMember(x => x.Id, opt => opt.Ignore());
         }
     }
 }

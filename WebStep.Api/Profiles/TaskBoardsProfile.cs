@@ -9,7 +9,9 @@ namespace WebStep.Api.Profiles
         public TaskBoardsProfile()
         {
             CreateMap<TaskBoard, TaskBoardDto>();
-            CreateMap<TaskBoardDto, TaskBoard>();
+
+            // Could create seperate dto's for read/create/update etc.. but for simplicity sake.
+            CreateMap<TaskBoardDto, TaskBoard>().ForMember(x => x.Id, opt => opt.Ignore());
         }
     }
 }
