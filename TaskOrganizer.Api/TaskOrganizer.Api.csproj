@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebStep.Dto\WebStep.Dto.csproj" />
+    <ProjectReference Include="..\TaskOrganizer.Shared\TaskOrganizer.Shared.csproj" />
   </ItemGroup>
 
 </Project>

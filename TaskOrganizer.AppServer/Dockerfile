@@ -7,11 +7,11 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["webStep.AppServer/webStep.AppServer.csproj", "webStep.AppServer/"]
-COPY ["WebStep.Dto/WebStep.Dto.csproj", "WebStep.Dto/"]
-RUN dotnet restore "webStep.AppServer/webStep.AppServer.csproj"
+COPY ["TaskOrganizer.AppServer/webStep.AppServer.csproj", "TaskOrganizer.AppServer/"]
+COPY ["TaskOrganizer.Shared/TaskOrganizer.Shared.csproj", "TaskOrganizer.Shared/"]
+RUN dotnet restore "TaskOrganizer.AppServer/webStep.AppServer.csproj"
 COPY . .
-WORKDIR "/src/webStep.AppServer"
+WORKDIR "/src/TaskOrganizer.AppServer"
 RUN dotnet build "webStep.AppServer.csproj" -c Release -o /app/build
 
 FROM build AS publish

@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32126.317
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebStep.Dto", "WebStep.Dto\WebStep.Dto.csproj", "{FB771E86-FC33-4ADC-AE09-06C68F088718}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskOrganizer.Api", "TaskOrganizer.Api\TaskOrganizer.Api.csproj", "{C2477AFC-D8A5-4643-B5FB-FA22A3D69FEE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebStep.Api", "WebStep.Api\WebStep.Api.csproj", "{3AC3330E-FCDD-4B8F-8D54-BC6B874A58FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "webStep.AppServer", "TaskOrganizer.AppServer\webStep.AppServer.csproj", "{22B309CB-D384-43EF-A98C-056A6E1EF779}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "webStep.AppServer", "webStep.AppServer\webStep.AppServer.csproj", "{DCF269A6-9352-4C27-86E7-D6552109291D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskOrganizer.Shared", "TaskOrganizer.Shared\TaskOrganizer.Shared.csproj", "{0692B4C6-4F57-47A0-9191-3F37ADB08F89}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,18 +15,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FB771E86-FC33-4ADC-AE09-06C68F088718}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FB771E86-FC33-4ADC-AE09-06C68F088718}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FB771E86-FC33-4ADC-AE09-06C68F088718}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FB771E86-FC33-4ADC-AE09-06C68F088718}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3AC3330E-FCDD-4B8F-8D54-BC6B874A58FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3AC3330E-FCDD-4B8F-8D54-BC6B874A58FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3AC3330E-FCDD-4B8F-8D54-BC6B874A58FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3AC3330E-FCDD-4B8F-8D54-BC6B874A58FA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DCF269A6-9352-4C27-86E7-D6552109291D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DCF269A6-9352-4C27-86E7-D6552109291D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DCF269A6-9352-4C27-86E7-D6552109291D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DCF269A6-9352-4C27-86E7-D6552109291D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2477AFC-D8A5-4643-B5FB-FA22A3D69FEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2477AFC-D8A5-4643-B5FB-FA22A3D69FEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2477AFC-D8A5-4643-B5FB-FA22A3D69FEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2477AFC-D8A5-4643-B5FB-FA22A3D69FEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22B309CB-D384-43EF-A98C-056A6E1EF779}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22B309CB-D384-43EF-A98C-056A6E1EF779}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22B309CB-D384-43EF-A98C-056A6E1EF779}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22B309CB-D384-43EF-A98C-056A6E1EF779}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0692B4C6-4F57-47A0-9191-3F37ADB08F89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0692B4C6-4F57-47A0-9191-3F37ADB08F89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0692B4C6-4F57-47A0-9191-3F37ADB08F89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0692B4C6-4F57-47A0-9191-3F37ADB08F89}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,15 +4,15 @@ services:
     environment:
       ACCEPT_EULA: "y"
       MSSQL_PID: "Express"
-      SA_PASSWORD: "web5tep!" 
+      SA_PASSWORD: "Pa55Word!" 
     ports:
       - "1433:1433"
   api:
     build:
       context: .
-      dockerfile: "WebStep.Api/Dockerfile"
+      dockerfile: "TaskOrganizer.Api/Dockerfile"
     environment:
-       - "ConnectionStrings:Default=Server=db,1433;Initial Catalog=TasksDb;User ID=SA;Password=web5tep!"
+       - "ConnectionStrings:Default=Server=db,1433;Initial Catalog=TasksDb;User ID=SA;Password=Pa55Word!"
     ports:
       - "8080:80"
     expose:
@@ -22,7 +22,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: "WebStep.AppServer/Dockerfile"
+      dockerfile: "TaskOrganizer.AppServer/Dockerfile"
     environment:
       - "ApiBaseUri=http://api:80/api/"
       - "TasksApiBaseUri=http://api:80/api/tasks/"
