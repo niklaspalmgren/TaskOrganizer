@@ -1,0 +1,36 @@
+services:
+  db:
+    image: "mcr.microsoft.com/mssql/server:2019-latest"
+    environment:
+      ACCEPT_EULA: "y"
+      MSSQL_PID: "Express"
+      SA_PASSWORD: "web5tep!" 
+    ports:
+      - "1433:1433"
+  api:
+    build:
+      context: .
+      dockerfile: "WebStep.Api/Dockerfile"
+    environment:
+       - "ConnectionStrings:Default=Server=db,1433;Initial Catalog=TasksDb;User ID=SA;Password=web5tep!"
+    ports:
+      - "8080:80"
+    expose:
+      - "80"
+    depends_on:
+      - "db"
+  app:
+    build:
+      context: .
+      dockerfile: "WebStep.AppServer/Dockerfile"
+    environment:
+      - "ApiBaseUri=http://api:80/api/"
+      - "TasksApiBaseUri=http://api:80/api/tasks/"
+      - "TaskBoardsApiBaseUri=http://api:80/api/taskboards/"
+    ports:
+      - "7070:80"
+    expose:
+      - "80"
+    depends_on:
+      - "api"
+    
