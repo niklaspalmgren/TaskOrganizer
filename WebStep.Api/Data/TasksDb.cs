@@ -2,9 +2,9 @@
 
 namespace WebStep.Api.Data
 {
-    public class TasksDataContext : DbContext
+    public class TasksDb : DbContext
     {
-        public TasksDataContext(DbContextOptions<TasksDataContext> options) : base(options)
+        public TasksDb(DbContextOptions<TasksDb> options) : base(options)
         {
         }
 

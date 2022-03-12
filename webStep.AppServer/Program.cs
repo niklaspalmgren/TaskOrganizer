@@ -1,4 +1,4 @@
-using webStep.AppServer.Data;
+using webStep.AppServer.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +7,11 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
 // Http client configurations
+builder.Services.AddHttpClient("default", c =>
+{
+    c.BaseAddress = new Uri(builder.Configuration.GetValue<string>("ApiBaseUri"));
+});
+
 builder.Services.AddHttpClient("Tasks", c =>
 {
     c.BaseAddress = new Uri(builder.Configuration.GetValue<string>("TasksApiBaseUri"));
@@ -19,6 +24,7 @@ builder.Services.AddHttpClient("TaskBoards", c =>
 
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<ITaskBoardService, TaskBoardService>();
+builder.Services.AddScoped<IThrowApiExceptionService, ThrowApiExceptionService>();
 
 
 var app = builder.Build();
@@ -27,7 +33,6 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 

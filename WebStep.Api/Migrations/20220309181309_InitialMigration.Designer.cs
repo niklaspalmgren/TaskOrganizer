@@ -11,7 +11,7 @@ using WebStep.Api.Data;
 
 namespace Api.Migrations
 {
-    [DbContext(typeof(TasksDataContext))]
+    [DbContext(typeof(TasksDb))]
     [Migration("20220309181309_InitialMigration")]
     partial class InitialMigration
     {

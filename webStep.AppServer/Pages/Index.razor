@@ -1,12 +1,17 @@
 ﻿@page "/"
 @using WebStep.Dto
-@using webStep.AppServer.Data
+@using webStep.AppServer.Services
 @inject ITaskBoardService taskBoardService;
+@inject IThrowApiExceptionService throwApiExceptionService;
 
 <PageTitle>Index</PageTitle>
 
 <div class="container mt-lg-6 mt-md-4 mt-sm-3 mt-xs-2">
-
+    <div class="row gy-4">
+        <div class="col-2">
+            <button type="button" class="btn btn-outline-light" @onclick="@ThrowApiExceptionAsync">Throw api exception</button>
+        </div>
+    </div>
     <div class="row gy-4">
 
         @foreach (var board in taskBoards)
@@ -17,8 +22,8 @@
         }
 
         <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                <NewTaskBoardComponent OnCreated="@OnNewTaskBoardCreated" />
-            </div>
+            <NewTaskBoardComponent OnCreated="@OnNewTaskBoardCreated" />
+        </div>
     </div>
 </div>
 
@@ -40,6 +45,11 @@
     private void OnTaskUpdated(TaskDto taskDto)
     {
         AddTaskToTaskBoard(taskDto);
+    }
+
+    private async Task ThrowApiExceptionAsync()
+    {
+        await throwApiExceptionService.ThrowApiExceptionAsync();
     }
 
     private void AddTaskToTaskBoard(TaskDto taskDto)

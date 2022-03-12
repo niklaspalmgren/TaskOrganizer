@@ -34,7 +34,7 @@ namespace WebStep.Api.Controllers
             return Ok(taskBoardDtos);
         }
 
-        [HttpGet("{id}", Name = "GetTaskBoardById")]
+        [HttpGet("{id}")]
         public ActionResult<TaskBoardDto> GetTaskBoardById(int id)
         {
             var taskBoardFromRepo = _taskBoardRepo.GetTaskBoardById(id);
@@ -57,12 +57,15 @@ namespace WebStep.Api.Controllers
 
             var returnDto = _mapper.Map<TaskBoardDto>(taskBoard);
 
-            return CreatedAtRoute(nameof(GetTaskBoardById), new {Id = returnDto.Id}, returnDto);
+            return CreatedAtAction(nameof(GetTaskBoardById), new {Id = returnDto.Id}, returnDto);
         }
 
         [HttpPut("{id}")]
         public ActionResult UpdateTaskBoard(int id, TaskBoardDto dto)
         {
+            if (id != dto.Id)
+                return BadRequest();
+
             var taskBoardEntityFromRepo = _taskBoardRepo.GetTaskBoardById(id);
 
             if (taskBoardEntityFromRepo == null)

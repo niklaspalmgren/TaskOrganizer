@@ -34,7 +34,7 @@ public class TasksController : ControllerBase
         return Ok(taskDtos);
     }
 
-    [HttpGet("{id}", Name = "GetTaskById")]
+    [HttpGet("{id}")]
     public ActionResult<TaskDto> GetTaskById(int id)
     {
         var taskItem = _taskRepo.GetTaskById(id);
@@ -57,12 +57,15 @@ public class TasksController : ControllerBase
 
         var taskDto = _mapper.Map<TaskDto>(task);
 
-        return CreatedAtRoute(nameof(GetTaskById), new { Id = taskDto.Id }, taskDto);
+        return CreatedAtAction(nameof(GetTaskById), new { Id = taskDto.Id }, taskDto);
     }
 
     [HttpPut("{id}")]
     public ActionResult UpdateTask(int id, TaskDto dto)
     {
+        if (id != dto.Id)
+            return BadRequest();
+
         var taskEntityFromRepo = _taskRepo.GetTaskById(id);
 
         if (taskEntityFromRepo == null)

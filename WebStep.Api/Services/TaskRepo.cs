@@ -4,9 +4,9 @@ namespace WebStep.Api.Services
 {
     public class TaskRepo : ITaskRepo
     {
-        private readonly TasksDataContext _context;
+        private readonly TasksDb _context;
 
-        public TaskRepo(TasksDataContext context)
+        public TaskRepo(TasksDb context)
         {
             _context = context;
         }
