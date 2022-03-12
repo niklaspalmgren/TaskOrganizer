@@ -46,9 +46,9 @@ namespace WebStep.Api.Data
             if (!context.Tasks.Any())
             {
 
-                var taskBoard = context.TaskBoards.First();
+                var taskBoards = context.TaskBoards;
 
-                if (taskBoard != null)
+                if (taskBoards != null && taskBoards.Any)
                 {
                     var tasks = new List<Entities.Task>()
                     {
