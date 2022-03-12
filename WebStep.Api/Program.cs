@@ -9,23 +9,24 @@ builder.Services.AddControllers();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<ITaskRepo, TaskRepo>();
 builder.Services.AddScoped<ITaskBoardRepo, TaskBoardRepo>();
-builder.Services.AddDbContext<TasksDataContext>(options =>
+builder.Services.AddDbContext<TasksDb>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
 });
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Migrates and seeds data if empty
+// Creates, migrates and seeds data (if empty)
 PrepDb.Prep(app);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseExceptionHandler("/api/error-development");
+}
+else
+{
+    app.UseExceptionHandler("/api/error");
 }
 
 app.UseHttpsRedirection();

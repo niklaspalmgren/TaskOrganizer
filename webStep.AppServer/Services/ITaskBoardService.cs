@@ -1,6 +1,6 @@
 ﻿using WebStep.Dto;
 
-namespace webStep.AppServer.Data
+namespace webStep.AppServer.Services
 {
     public interface ITaskBoardService
     {

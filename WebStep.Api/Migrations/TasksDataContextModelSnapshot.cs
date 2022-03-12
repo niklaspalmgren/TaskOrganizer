@@ -9,7 +9,7 @@ using WebStep.Api.Data;
 
 namespace Api.Migrations
 {
-    [DbContext(typeof(TasksDataContext))]
+    [DbContext(typeof(TasksDb))]
     partial class TasksDataContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

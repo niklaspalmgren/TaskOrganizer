@@ -9,7 +9,7 @@ namespace WebStep.Api.Data
         {
             using var serviceScope = app.ApplicationServices.CreateScope();
 
-            var context = serviceScope.ServiceProvider.GetService<TasksDataContext>();
+            var context = serviceScope.ServiceProvider.GetService<TasksDb>();
 
             if (context == null)
                 return;
@@ -18,12 +18,12 @@ namespace WebStep.Api.Data
             SeedData(context);
         }
 
-        public static void Migrate(TasksDataContext context)
+        public static void Migrate(TasksDb context)
         {
             context.Database.Migrate();
         }
 
-        public static void SeedData(TasksDataContext context)
+        public static void SeedData(TasksDb context)
         {
             if (!context.TaskBoards.Any())
             {

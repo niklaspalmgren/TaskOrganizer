@@ -10,7 +10,7 @@ using WebStep.Api.Data;
 
 namespace Api.Migrations
 {
-    [DbContext(typeof(TasksDataContext))]
+    [DbContext(typeof(TasksDb))]
     [Migration("20220310193226_TaskEntityUpdate")]
     partial class TaskEntityUpdate
     {
