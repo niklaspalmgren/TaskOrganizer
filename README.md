@@ -9,25 +9,19 @@ Project is created with:
 * Blazor
 * Bootstrap
 
-## Setup
+## Prerequisites
 In order to run this project you'll need to have docker installed and running.
 https://www.docker.com/get-started
 
-1. #### Clone repository
+## Setup
+Clone this repo to your desktop.
 ```
-git clone https://github.com/niklaspalmgren/TaskOrganizer
+$ git clone https://github.com/niklaspalmgren/TaskOrganizer
 ```
-
-2. #### Build
+## Usage
+After you've cloned this repo to your desktop, go to its root directory and run the following commands to build and run the docker images.
 ```
-cd <project root>
-docker-compose build
+$ docker-compose build
+$ docker-compose up -d
 ```
-
-3. #### Run
-```
-cd <project root>
-docker-compose up -d
-```
-4. #### Access
-Once the containers have started you should be able to access the web app through the following url: http://localhost:7070
+Once all containers have started, access the web app: http://localhost:7070
