@@ -1,8 +1,8 @@
 ﻿@page "/"
 @using TaskOrganizer.AppServer.Services
 @using TaskOrganizer.Shared
+@using webStep.AppServer.Components
 @inject ITaskBoardService taskBoardService;
-@inject IThrowApiExceptionService throwApiExceptionService;
 
 <PageTitle>Index</PageTitle>
 
@@ -45,11 +45,6 @@
     private void OnTaskUpdated(TaskDto taskDto)
     {
         AddTaskToTaskBoard(taskDto);
-    }
-
-    private async Task ThrowApiExceptionAsync()
-    {
-        await throwApiExceptionService.ThrowApiExceptionAsync();
     }
 
     private void AddTaskToTaskBoard(TaskDto taskDto)

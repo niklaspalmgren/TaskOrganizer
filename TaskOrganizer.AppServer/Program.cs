@@ -25,7 +25,6 @@ builder.Services.AddHttpClient("TaskBoards", c =>
 
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<ITaskBoardService, TaskBoardService>();
-builder.Services.AddScoped<IThrowApiExceptionService, ThrowApiExceptionService>();
 builder.Services.AddScoped<ITaskBoardFactory, TaskBoardFactory>();
 builder.Services.AddScoped<ITaskFactory, TaskOrganizer.Shared.Factories.TaskFactory>();
 
