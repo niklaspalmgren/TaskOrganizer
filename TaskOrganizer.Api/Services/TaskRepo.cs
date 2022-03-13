@@ -1,6 +1,6 @@
-﻿using WebStep.Api.Data;
+﻿using TaskOrganizer.Api.Data;
 
-namespace WebStep.Api.Services
+namespace TaskOrganizer.Api.Services
 {
     public class TaskRepo : ITaskRepo
     {
@@ -11,7 +11,7 @@ namespace WebStep.Api.Services
             _context = context;
         }
 
-        
+
         public IEnumerable<Entities.Task> GetAllTasks()
         {
             var tasks = _context.Tasks;

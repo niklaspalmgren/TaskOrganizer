@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using WebStep.Api.Entities;
-using WebStep.Api.Services;
-using WebStep.Dto;
+using TaskOrganizer.Api.Entities;
+using TaskOrganizer.Api.Services;
+using TaskOrganizer.Shared;
 
-namespace WebStep.Api.Controllers
+namespace TaskOrganizer.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -57,7 +57,7 @@ namespace WebStep.Api.Controllers
 
             var returnDto = _mapper.Map<TaskBoardDto>(taskBoard);
 
-            return CreatedAtAction(nameof(GetTaskBoardById), new {Id = returnDto.Id}, returnDto);
+            return CreatedAtAction(nameof(GetTaskBoardById), new { returnDto.Id }, returnDto);
         }
 
         [HttpPut("{id}")]

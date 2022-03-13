@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace WebStep.Api.Controllers
+namespace TaskOrganizer.Api.Controllers
 {
     [ApiController]
     public class ThrowController : ControllerBase

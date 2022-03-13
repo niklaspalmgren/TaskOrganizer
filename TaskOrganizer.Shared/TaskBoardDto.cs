@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace WebStep.Dto
+namespace TaskOrganizer.Shared
 {
     public class TaskBoardDto
     {
@@ -9,7 +9,7 @@ namespace WebStep.Dto
         public int Id { get; set; }
 
         [Required]
-        [StringLength(50, MinimumLength = 5)]
+        [StringLength(50, MinimumLength = 1)]
         public string Name { get; set; } = string.Empty;
 
         public List<TaskDto> Tasks { get; set; } = new List<TaskDto>();

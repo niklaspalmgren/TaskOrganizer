@@ -1,6 +1,6 @@
-﻿using WebStep.Api.Entities;
+﻿using TaskOrganizer.Api.Entities;
 
-namespace WebStep.Api.Services
+namespace TaskOrganizer.Api.Services
 {
     public interface ITaskBoardRepo
     {
@@ -9,6 +9,6 @@ namespace WebStep.Api.Services
         public void CreateTaskBoard(TaskBoard taskBoard);
         public void DeleteTaskBoardAndRelatedTasks(TaskBoard taskBoard);
         public void SaveChanges();
-        
+
     }
 }

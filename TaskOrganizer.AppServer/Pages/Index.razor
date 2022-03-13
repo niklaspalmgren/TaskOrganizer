@@ -1,15 +1,15 @@
 ﻿@page "/"
-@using WebStep.Dto
-@using webStep.AppServer.Services
+@using TaskOrganizer.AppServer.Services
+@using TaskOrganizer.Shared
 @inject ITaskBoardService taskBoardService;
 @inject IThrowApiExceptionService throwApiExceptionService;
 
 <PageTitle>Index</PageTitle>
 
-<div class="container mt-lg-6 mt-md-4 mt-sm-3 mt-xs-2">
-    <div class="row gy-4">
-        <div class="col-2">
-            <button type="button" class="btn btn-outline-light" @onclick="@ThrowApiExceptionAsync">Throw api exception</button>
+<div class="container mt-lg-4 mt-md-3 mt-sm-2 mt-xs-2">
+    <div class="row mb-4">
+        <div class="col-auto">
+            <NewTaskBoardComponent OnCreated="@OnNewTaskBoardCreated" />
         </div>
     </div>
     <div class="row gy-4">
@@ -20,10 +20,6 @@
                 <TaskBoardComponent TaskBoards="@taskBoards" TaskBoard="@board" OnDeleted="@OnTaskBoardDeleted" TaskUpdated="@OnTaskUpdated" />
             </div>
         }
-
-        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-            <NewTaskBoardComponent OnCreated="@OnNewTaskBoardCreated" />
-        </div>
     </div>
 </div>
 
@@ -39,6 +35,10 @@
     private void OnTaskBoardDeleted(TaskBoardDto taskBoardDto)
     {
         var toRemove = taskBoards.FirstOrDefault(x => x == taskBoardDto);
+        
+        if (toRemove == null)
+            return;
+
         taskBoards.Remove(toRemove);
     }
 

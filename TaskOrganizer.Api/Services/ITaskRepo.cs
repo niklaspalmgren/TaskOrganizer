@@ -1,4 +1,4 @@
-﻿namespace WebStep.Api.Services
+﻿namespace TaskOrganizer.Api.Services
 {
     public interface ITaskRepo
     {

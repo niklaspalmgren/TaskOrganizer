@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TaskOrganizer.Api.Entities;
 
-namespace WebStep.Api.Data
+namespace TaskOrganizer.Api.Data
 {
     public class TasksDb : DbContext
     {
@@ -9,6 +10,6 @@ namespace WebStep.Api.Data
         }
 
         public DbSet<Entities.Task> Tasks { get; set; }
-        public DbSet<Entities.TaskBoard> TaskBoards { get; set; }
+        public DbSet<TaskBoard> TaskBoards { get; set; }
     }
 }

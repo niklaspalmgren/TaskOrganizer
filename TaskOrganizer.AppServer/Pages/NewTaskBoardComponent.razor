@@ -1,23 +1,34 @@
-﻿@using WebStep.Dto
-@using webStep.AppServer.Services
+﻿@using TaskOrganizer.AppServer.Services
+@using TaskOrganizer.Shared
+@using TaskOrganizer.Shared.Factories
 @inject ITaskBoardService taskBoardService;
+@inject ITaskBoardFactory taskBoardFactory;
 
 @if (InEditMode)
 {
-    <EditForm Model="@taskBoard" OnValidSubmit="@OnTaskBoardValidSumbitAsync" @onfocusout="@OnFormFocusOut">
+    <EditForm Model="@taskBoard" OnValidSubmit="@OnTaskBoardValidSumbitAsync">
         <DataAnnotationsValidator />
         <ValidationSummary />
+
         <div class="form-group row">
-            <div class="col">
+            <div class="col-auto">
                 <InputText id="name" @bind-Value="@taskBoard.Name" class="form-control" />
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-success form-control">Add</button>
+            </div>
+            <div class="col-auto">
+                <button @onclick="@ExitEditMode" type="button" class="btn btn-outline-light form-control">Cancel</button>
             </div>
         </div>
     </EditForm>
 }
 else
 {
-    <div class="row gy-2 cursor-hand">
-        <h4 class="task-board-title" @onclick="@OnTitleClick">Add new board</h4>
+    <div class="row gy-2">
+        <div class="col">
+            <button @onclick="@EnterEditMode" type="button" class="btn btn-outline-light"><i class="bi bi-plus-lg"></i> Add Board</button>
+        </div>
     </div>
 }
 
@@ -26,18 +37,19 @@ else
     [Parameter]
     public EventCallback<TaskBoardDto> OnCreated { get; set; }
 
-    private TaskBoardDto taskBoard { get; set; } = new TaskBoardDto();
+    private TaskBoardDto taskBoard { get; set; }
 
     private bool InEditMode { get; set; }
 
-    private void OnTitleClick()
+    private void EnterEditMode()
     {
+        taskBoard = taskBoardFactory.Create();
         InEditMode = true;
     }
 
-    private void OnFormFocusOut()
+    private void ExitEditMode()
     {
-        taskBoard.Name = string.Empty;
+        taskBoard = taskBoardFactory.Create();
         InEditMode = false;
     }
 
@@ -46,8 +58,7 @@ else
         var createdTaskBoard = await taskBoardService.CreateTaskBoardAsync(taskBoard);
         await OnCreated.InvokeAsync(createdTaskBoard);
 
-        taskBoard = new TaskBoardDto();
-        InEditMode = false;
+        ExitEditMode();
     }
 
 }

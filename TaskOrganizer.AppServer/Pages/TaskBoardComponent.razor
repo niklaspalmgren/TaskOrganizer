@@ -1,57 +1,53 @@
-﻿@using WebStep.Dto
-@using webStep.AppServer.Services
+﻿@using TaskOrganizer.Shared
+@using TaskOrganizer.AppServer.Services
 @inject ITaskService taskService;
 @inject ITaskBoardService taskBoardService;
 
 
-<div class="container">
 
-    <div class="row gy-2 mb-2 justify-content-between">
-        <div class="col-auto">
-            <h4 class="task-board-title">@TaskBoard.Name</h4>
-        </div>
-        <div class="col-auto">
-            <i class="fs-5 bi bi-trash delete-taskboard-button cursor-hand" @onclick="OnDeleteClickedAsync"></i>
-        </div>
+<div class="row gy-2 mb-2 justify-content-between">
+    <div class="col-auto">
+        <h3 class="task-board-title">@TaskBoard.Name</h3>
     </div>
+    <div class="col-auto">
+        <i class="fs-5 bi bi-trash delete-taskboard-button cursor-hand" @onclick="OnDeleteClickedAsync"></i>
+    </div>
+</div>
 
     @if (IsNewTaskControlVisible)
-    {
-        <div class="row gy-2 mb-3" id="newTaskRow">
-            <div class="col">
-                <NewTaskComponent TaskBoardId="@TaskBoard.Id" OnCreated="@OnNewTaskCreatedAsync" OnCancel="@OnNewTaskCancel" />
-            </div>
+{
+    <div class="row gy-2 mb-3" id="newTaskRow">
+        <div class="col">
+            <NewTaskComponent TaskBoardId="@TaskBoard.Id" OnCreated="@OnNewTaskCreatedAsync" OnCancel="@OnNewTaskCancel" />
         </div>
-    }
-    else
-    {
-        <div class="row gy-2 mb-3">
-            <div class="col d-grid">
-                <button class="btn btn-outline-primary" @onclick="@ShowAddNewTaskComponent">
-                    <i class="bi bi-plus-lg"></i> Add Task
-                </button>
-            </div>
+    </div>
+}
+else
+{
+    <div class="row gy-2 mb-3">
+        <div class="col d-grid">
+            <button class="btn btn-outline-light" @onclick="@ShowAddNewTaskComponent">
+                <i class="bi bi-plus-lg"></i> Add Task
+            </button>
         </div>
-    }
+    </div>
+}
 
-    @foreach (var task in TaskBoard.Tasks)
-    {
-        <div class="row gy-2 mb-3">
-            <div class="col">
-                <TaskComponent Task="@task" TaskBoards="@TaskBoards" OnUpdated="@OnTaskUpdated" OnDeleted="@OnTaskDeleted" />
-            </div>
+@foreach (var task in TaskBoard.Tasks)
+{
+    <div class="row gy-2 mb-3">
+        <div class="col">
+            <TaskComponent Task="@task" TaskBoards="@TaskBoards" OnUpdated="@OnTaskUpdated" OnDeleted="@OnTaskDeleted" />
         </div>
-    }
+    </div>
+}
 
 
 
-
-</div>
 
 @code {
     [Parameter]
-    
-    public TaskBoardDto TaskBoard { get; set; } = new TaskBoardDto();
+    public TaskBoardDto TaskBoard { get; set; }
     [Parameter]
     public List<TaskBoardDto> TaskBoards { get; set; } = new List<TaskBoardDto>();
 
@@ -85,8 +81,6 @@
     {
         RemoveTaskFromTaskBoard(taskDto);
     }
-
-    
 
     private void RemoveTaskFromTaskBoard(TaskDto taskDto)
     {

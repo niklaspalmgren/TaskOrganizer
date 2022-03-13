@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using WebStep.Dto;
+using TaskOrganizer.Shared;
 
-namespace WebStep.Api.Profiles
+namespace TaskOrganizer.Api.Profiles
 {
     public class TasksProfile : Profile
     {

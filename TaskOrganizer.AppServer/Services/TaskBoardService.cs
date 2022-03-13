@@ -1,6 +1,6 @@
-﻿using WebStep.Dto;
+﻿using TaskOrganizer.Shared;
 
-namespace webStep.AppServer.Services
+namespace TaskOrganizer.AppServer.Services
 {
     public class TaskBoardService : ITaskBoardService
     {

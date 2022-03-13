@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using WebStep.Api.Entities;
-using WebStep.Dto;
+using TaskOrganizer.Api.Entities;
+using TaskOrganizer.Shared;
 
-namespace WebStep.Api.Profiles
+namespace TaskOrganizer.Api.Profiles
 {
     public class TaskBoardsProfile : Profile
     {

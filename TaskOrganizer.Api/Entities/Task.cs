@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WebStep.Api.Entities;
+namespace TaskOrganizer.Api.Entities;
 
 public class Task
 {

@@ -1,4 +1,4 @@
-﻿namespace webStep.AppServer.Services
+﻿namespace TaskOrganizer.AppServer.Services
 {
     public interface IThrowApiExceptionService
     {

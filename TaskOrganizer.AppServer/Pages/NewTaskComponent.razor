@@ -1,4 +1,6 @@
-﻿@using WebStep.Dto
+﻿@using TaskOrganizer.Shared
+@using TaskOrganizer.Shared.Factories
+@inject ITaskFactory taskFactory;
 
 <div class="card task shadow">
     <div class="card-body">
@@ -42,13 +44,18 @@
     public int TaskBoardId { get; set; }
 
     [Parameter]
-    public TaskDto Task { get; set; } = new TaskDto();
-
-    [Parameter]
     public EventCallback<TaskDto> OnCreated { get; set; }
 
     [Parameter]
     public EventCallback OnCancel { get; set; }
+
+    protected TaskDto Task { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Task = taskFactory.Create(TaskBoardId);
+    }
 
     private async Task CancelAsync()
     {
@@ -57,7 +64,6 @@
 
     private async Task HandleValidSubmitAsync()
     {
-        Task.TaskBoardId = TaskBoardId;
         await OnCreated.InvokeAsync(Task);
     }
 }

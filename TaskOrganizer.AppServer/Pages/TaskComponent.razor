@@ -1,6 +1,8 @@
-﻿@using WebStep.Dto
-@using webStep.AppServer.Services
+﻿@using TaskOrganizer.Shared
+@using TaskOrganizer.AppServer.Services
+@using TaskOrganizer.Shared.Factories
 @inject ITaskService taskService;
+@inject ITaskFactory taskFactory;
 
 @if (_inEditMode)
 {
@@ -63,17 +65,14 @@ else
     <div class="card task shadow" @onclick="@EnterEditMode">
         <div class="card-body">
             <h5 class="card-title">@Task.Name</h5>
-            <p class="card-text">@Task.Description</p>
+            <p class="card-text text-muted">@Task.Description</p>
         </div>
     </div>
 }
 
-
-
-
 @code {
     [Parameter]
-    public TaskDto Task { get; set; } = new TaskDto();
+    public TaskDto? Task { get; set; }
 
     [Parameter]
     public EventCallback<TaskDto> OnDeleted { get; set; }
@@ -84,33 +83,41 @@ else
     [Parameter]
     public List<TaskBoardDto> TaskBoards { get; set; } = new List<TaskBoardDto>();
 
-    private TaskDto _editedTask { get; set; } = new TaskDto();
+    private TaskDto? _editedTask { get; set; }
     private bool _inEditMode { get; set; }
 
     private void EnterEditMode()
     {
-        _editedTask = new TaskDto();
-        _editedTask.Name = Task.Name;
-        _editedTask.Description = Task.Description;
-        _editedTask.TaskBoardId = Task.TaskBoardId;
+        if (Task == null)
+            return;
 
+        _editedTask = taskFactory.Create(Task.Name, Task.Description, Task.TaskBoardId);
         _inEditMode = true;
     }
 
     private void CancelEdit()
     {
-        _editedTask = new TaskDto();
+        if (Task == null)
+            return;
+
+        _editedTask = taskFactory.Create(Task.TaskBoardId);
         _inEditMode = false;
     }
 
     private async Task DeleteTaskAsync()
     {
+        if (Task == null)
+            return;
+
         await taskService.DeleteTaskAsync(Task);
         await OnDeleted.InvokeAsync(Task);
     }
 
     private async Task UpdateTaskAsync()
     {
+        if (Task == null || _editedTask == null)
+            return;
+
         Task.Name = _editedTask.Name;
         Task.Description = _editedTask.Description;
         Task.TaskBoardId = _editedTask.TaskBoardId;

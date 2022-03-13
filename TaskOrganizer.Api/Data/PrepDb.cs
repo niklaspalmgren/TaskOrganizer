@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WebStep.Api.Entities;
+using TaskOrganizer.Api.Entities;
 
-namespace WebStep.Api.Data
+namespace TaskOrganizer.Api.Data
 {
     public static class PrepDb
     {

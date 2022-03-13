@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WebStep.Api.Data;
-using WebStep.Api.Entities;
+using TaskOrganizer.Api.Data;
+using TaskOrganizer.Api.Entities;
 
-namespace WebStep.Api.Services
+namespace TaskOrganizer.Api.Services
 {
     public class TaskBoardRepo : ITaskBoardRepo
     {
@@ -49,6 +49,6 @@ namespace WebStep.Api.Services
             _context.SaveChanges();
         }
 
-        
+
     }
 }
