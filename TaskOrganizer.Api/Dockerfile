@@ -2,6 +2,8 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
+RUN apt-get update \
+    && apt-get -y install curl
 EXPOSE 80
 EXPOSE 443
 

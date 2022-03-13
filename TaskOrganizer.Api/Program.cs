@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddHealthChecks();
 builder.Services.AddScoped<ITaskRepo, TaskRepo>();
 builder.Services.AddScoped<ITaskBoardRepo, TaskBoardRepo>();
 builder.Services.AddDbContext<TasksDb>(options =>
@@ -32,6 +33,8 @@ else
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.MapHealthChecks("/api/health");
 
 app.MapControllers();
 
