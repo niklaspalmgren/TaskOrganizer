@@ -9,16 +9,13 @@ namespace TaskOrganizer.Api.Controllers;
 [ApiController]
 public class TasksController : ControllerBase
 {
-    private readonly ILogger<TasksController> _logger;
     private readonly IMapper _mapper;
     private readonly ITaskRepo _taskRepo;
 
     public TasksController(
-        ILogger<TasksController> logger,
         IMapper mapper,
         ITaskRepo taskRepo)
     {
-        _logger = logger;
         _mapper = mapper;
         _taskRepo = taskRepo;
     }
@@ -27,9 +24,12 @@ public class TasksController : ControllerBase
     [HttpGet]
     public ActionResult<IEnumerable<TaskDto>> GetAllTasks()
     {
-        var tasks = _taskRepo.GetAllTasks();
+        var tasksFromRepo = _taskRepo.GetAllTasks();
 
-        var taskDtos = _mapper.Map<IEnumerable<Entities.Task>, IEnumerable<TaskDto>>(tasks);
+        if (tasksFromRepo == null || !tasksFromRepo.Any())
+            return NotFound();
+
+        var taskDtos = _mapper.Map<IEnumerable<Entities.Task>, IEnumerable<TaskDto>>(tasksFromRepo);
 
         return Ok(taskDtos);
     }
@@ -37,12 +37,12 @@ public class TasksController : ControllerBase
     [HttpGet("{id}")]
     public ActionResult<TaskDto> GetTaskById(int id)
     {
-        var taskItem = _taskRepo.GetTaskById(id);
+        var taskFromRepo = _taskRepo.GetTaskById(id);
 
-        if (taskItem == null)
+        if (taskFromRepo == null)
             return NotFound();
 
-        var taskDto = _mapper.Map<TaskDto>(taskItem);
+        var taskDto = _mapper.Map<TaskDto>(taskFromRepo);
 
         return Ok(taskDto);
     }
@@ -66,13 +66,13 @@ public class TasksController : ControllerBase
         if (id != dto.Id)
             return BadRequest();
 
-        var taskEntityFromRepo = _taskRepo.GetTaskById(id);
+        var taskFromRepo = _taskRepo.GetTaskById(id);
 
-        if (taskEntityFromRepo == null)
+        if (taskFromRepo == null)
             return NotFound();
 
         // Updates our entity from db context with values from our incomming dto
-        _mapper.Map(dto, taskEntityFromRepo);
+        _mapper.Map(dto, taskFromRepo);
         _taskRepo.SaveChanges();
 
         return NoContent();
@@ -82,12 +82,12 @@ public class TasksController : ControllerBase
     [HttpDelete("{id}")]
     public ActionResult DeleteTask(int id)
     {
-        var taskEntityFromRepo = _taskRepo.GetTaskById(id);
+        var taskFromRepo = _taskRepo.GetTaskById(id);
 
-        if (taskEntityFromRepo == null)
+        if (taskFromRepo == null)
             return NotFound();
 
-        _taskRepo.DeleteTask(taskEntityFromRepo);
+        _taskRepo.DeleteTask(taskFromRepo);
         _taskRepo.SaveChanges();
 
         return NoContent();

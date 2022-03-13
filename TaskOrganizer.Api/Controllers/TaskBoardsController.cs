@@ -10,16 +10,13 @@ namespace TaskOrganizer.Api.Controllers
     [ApiController]
     public class TaskBoardsController : ControllerBase
     {
-        private readonly ILogger<TaskBoardsController> _logger;
         private readonly IMapper _mapper;
         private readonly ITaskBoardRepo _taskBoardRepo;
 
         public TaskBoardsController(
-            ILogger<TaskBoardsController> logger,
             IMapper mapper,
             ITaskBoardRepo taskBoard)
         {
-            _logger = logger;
             _mapper = mapper;
             _taskBoardRepo = taskBoard;
         }
@@ -28,8 +25,11 @@ namespace TaskOrganizer.Api.Controllers
         public ActionResult<IEnumerable<TaskBoardDto>> GetAllTaskBoards()
         {
             var taskBoardsFromRepo = _taskBoardRepo.GetAllTaskBoards();
+            
+            if (taskBoardsFromRepo == null || !taskBoardsFromRepo.Any())
+                return NotFound();
 
-            var taskBoardDtos = _mapper.Map<IEnumerable<TaskBoard>, IEnumerable<TaskBoardDto>>(taskBoardsFromRepo);
+            var taskBoardDtos = _mapper.Map<IEnumerable<TaskBoard>, IEnumerable<TaskBoardDto>>(taskBoardsFromRepo).ToList();
 
             return Ok(taskBoardDtos);
         }
@@ -40,7 +40,7 @@ namespace TaskOrganizer.Api.Controllers
             var taskBoardFromRepo = _taskBoardRepo.GetTaskBoardById(id);
 
             if (taskBoardFromRepo is null)
-                return NotFound();
+                return NotFound();                
 
             var taskBoardDto = _mapper.Map<TaskBoardDto>(taskBoardFromRepo);
 
@@ -66,13 +66,13 @@ namespace TaskOrganizer.Api.Controllers
             if (id != dto.Id)
                 return BadRequest();
 
-            var taskBoardEntityFromRepo = _taskBoardRepo.GetTaskBoardById(id);
+            var taskBoardFromRepo = _taskBoardRepo.GetTaskBoardById(id);
 
-            if (taskBoardEntityFromRepo == null)
+            if (taskBoardFromRepo == null)
                 return NotFound();
 
             // Updates our entity from db context with values from our incomming dto
-            _mapper.Map(dto, taskBoardEntityFromRepo);
+            _mapper.Map(dto, taskBoardFromRepo);
             _taskBoardRepo.SaveChanges();
 
             return NoContent();
@@ -81,12 +81,12 @@ namespace TaskOrganizer.Api.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteTaskBoardAndRelatedTasks(int id)
         {
-            var taskBoardEntityFromRepo = _taskBoardRepo.GetTaskBoardById(id);
+            var taskBoardFromRepo = _taskBoardRepo.GetTaskBoardById(id);
 
-            if (taskBoardEntityFromRepo == null)
+            if (taskBoardFromRepo == null)
                 return NotFound();
 
-            _taskBoardRepo.DeleteTaskBoardAndRelatedTasks(taskBoardEntityFromRepo);
+            _taskBoardRepo.DeleteTaskBoardAndRelatedTasks(taskBoardFromRepo);
             _taskBoardRepo.SaveChanges();
 
             return NoContent();
