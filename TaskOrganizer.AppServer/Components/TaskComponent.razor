@@ -51,7 +51,7 @@
                     <button type="button" @onclick="@DeleteTaskAsync" class="btn btn-danger form-control">Delete</button>
                 </div>
                 <div class="col">
-                    <button type="button" @onclick="@CancelEdit" class="btn btn-outline-light form-control">Cancel</button>
+                    <button type="button" @onclick="@ExitEditMode" class="btn btn-outline-light form-control">Cancel</button>
                 </div>
             </div>
 
@@ -78,13 +78,14 @@ else
     public EventCallback<TaskDto> OnDeleted { get; set; }
 
     [Parameter]
-    public EventCallback<TaskDto> OnUpdated { get; set; }
+    public EventCallback<TaskDto> OnTaskChangedBoard { get; set; }
 
     [Parameter]
     public List<TaskBoardDto> TaskBoards { get; set; } = new List<TaskBoardDto>();
 
     private TaskDto? _editedTask { get; set; }
-    private bool _inEditMode { get; set; }
+
+    private bool _inEditMode { get; set; } = false;
 
     private void EnterEditMode()
     {
@@ -95,7 +96,7 @@ else
         _inEditMode = true;
     }
 
-    private void CancelEdit()
+    private void ExitEditMode()
     {
         if (Task == null)
             return;
@@ -109,6 +110,8 @@ else
         if (Task == null)
             return;
 
+        ExitEditMode();
+
         await taskService.DeleteTaskAsync(Task);
         await OnDeleted.InvokeAsync(Task);
     }
@@ -118,13 +121,18 @@ else
         if (Task == null || _editedTask == null)
             return;
 
+        var hasChangedBoard = Task.TaskBoardId != _editedTask.TaskBoardId;
+
         Task.Name = _editedTask.Name;
         Task.Description = _editedTask.Description;
         Task.TaskBoardId = _editedTask.TaskBoardId;
 
         await taskService.UpdateTaskAsync(Task);
-        await OnUpdated.InvokeAsync(Task);
 
-        CancelEdit();
+        _inEditMode = false;
+
+        if (hasChangedBoard)
+            await OnTaskChangedBoard.InvokeAsync(Task);
+        
     }
 }

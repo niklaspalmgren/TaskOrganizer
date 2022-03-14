@@ -6,7 +6,7 @@
 
 @if (InEditMode)
 {
-    <EditForm Model="@taskBoard" OnValidSubmit="@OnTaskBoardValidSumbitAsync">
+    <EditForm Model="@taskBoard" OnValidSubmit="@CreateNewTaskBoardAsync">
         <DataAnnotationsValidator />
         <ValidationSummary />
 
@@ -35,9 +35,9 @@ else
 @code {
 
     [Parameter]
-    public EventCallback<TaskBoardDto> OnCreated { get; set; }
+    public EventCallback<TaskBoardDto> OnNewTaskBoardCreated { get; set; }
 
-    private TaskBoardDto taskBoard { get; set; }
+    private TaskBoardDto? taskBoard { get; set; }
 
     private bool InEditMode { get; set; }
 
@@ -53,10 +53,13 @@ else
         InEditMode = false;
     }
 
-    private async Task OnTaskBoardValidSumbitAsync()
+    private async Task CreateNewTaskBoardAsync()
     {
+        if (taskBoard == null)
+            return;
+
         var createdTaskBoard = await taskBoardService.CreateTaskBoardAsync(taskBoard);
-        await OnCreated.InvokeAsync(createdTaskBoard);
+        await OnNewTaskBoardCreated.InvokeAsync(createdTaskBoard);
 
         ExitEditMode();
     }

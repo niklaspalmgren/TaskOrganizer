@@ -1,10 +1,12 @@
-﻿@using TaskOrganizer.Shared
+﻿@using TaskOrganizer.AppServer.Services
+@using TaskOrganizer.Shared
 @using TaskOrganizer.Shared.Factories
 @inject ITaskFactory taskFactory;
+@inject ITaskService taskService;
 
 <div class="card task shadow">
     <div class="card-body">
-        <EditForm Model="@Task" OnValidSubmit="@HandleValidSubmitAsync">
+        <EditForm Model="@Task" OnValidSubmit="@CreateTaskAsync">
             <DataAnnotationsValidator />
             <ValidationSummary />
 
@@ -44,10 +46,10 @@
     public int TaskBoardId { get; set; }
 
     [Parameter]
-    public EventCallback<TaskDto> OnCreated { get; set; }
+    public EventCallback<TaskDto> OnNewTaskCreated { get; set; }
 
     [Parameter]
-    public EventCallback OnCancel { get; set; }
+    public EventCallback OnNewTaskCanceled { get; set; }
 
     protected TaskDto Task { get; set; }
 
@@ -59,11 +61,16 @@
 
     private async Task CancelAsync()
     {
-        await OnCancel.InvokeAsync();
+        await OnNewTaskCanceled.InvokeAsync();
     }
 
-    private async Task HandleValidSubmitAsync()
+    private async Task CreateTaskAsync()
     {
-        await OnCreated.InvokeAsync(Task);
+        var createdTask = await taskService.CreateTaskAsync(Task);
+
+        if (createdTask == null)
+            return;
+
+        await OnNewTaskCreated.InvokeAsync(createdTask);
     }
 }

@@ -1,7 +1,7 @@
 ﻿@page "/"
 @using TaskOrganizer.AppServer.Services
 @using TaskOrganizer.Shared
-@using webStep.AppServer.Components
+@using TaskOrganizer.AppServer.Components
 @inject ITaskBoardService taskBoardService;
 
 <PageTitle>Index</PageTitle>
@@ -9,7 +9,7 @@
 <div class="container mt-lg-4 mt-md-3 mt-sm-2 mt-xs-2">
     <div class="row mb-4">
         <div class="col-auto">
-            <NewTaskBoardComponent OnCreated="@OnNewTaskBoardCreated" />
+            <NewTaskBoardComponent OnNewTaskBoardCreated="@HandleCreatedTaskBoard" />
         </div>
     </div>
     <div class="row gy-4">
@@ -17,7 +17,7 @@
         @foreach (var board in taskBoards)
         {
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                <TaskBoardComponent TaskBoards="@taskBoards" TaskBoard="@board" OnDeleted="@OnTaskBoardDeleted" TaskUpdated="@OnTaskUpdated" />
+                <TaskBoardComponent TaskBoards="@taskBoards" TaskBoard="@board" OnTaskBoardDeleted="@RemoveTaskBoard" OnTaskChangedBoard="@AddTaskToTaskBoard" />
             </div>
         }
     </div>
@@ -32,19 +32,14 @@
         taskBoards = await taskBoardService.GetAllTaskBoardsAsync();
     }
 
-    private void OnTaskBoardDeleted(TaskBoardDto taskBoardDto)
+    private void RemoveTaskBoard(TaskBoardDto taskBoardDto)
     {
         var toRemove = taskBoards.FirstOrDefault(x => x == taskBoardDto);
-        
+
         if (toRemove == null)
             return;
 
         taskBoards.Remove(toRemove);
-    }
-
-    private void OnTaskUpdated(TaskDto taskDto)
-    {
-        AddTaskToTaskBoard(taskDto);
     }
 
     private void AddTaskToTaskBoard(TaskDto taskDto)
@@ -55,7 +50,7 @@
             taskBoard.Tasks.Add(taskDto);
     }
 
-    private void OnNewTaskBoardCreated(TaskBoardDto taskBoardDto)
+    private void HandleCreatedTaskBoard(TaskBoardDto taskBoardDto)
     {
         taskBoards.Add(taskBoardDto);
     }
