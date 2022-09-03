@@ -1,4 +1,5 @@
-﻿using TaskOrganizer.Api.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using TaskOrganizer.Api.Data;
 
 namespace TaskOrganizer.Api.Services
 {
@@ -12,15 +13,15 @@ namespace TaskOrganizer.Api.Services
         }
 
 
-        public IEnumerable<Entities.Task> GetAllTasks()
+        public async Task<List<Entities.Task>> GetAllTasksAsync()
         {
-            var tasks = _context.Tasks;
+            var tasks = await _context.Tasks.ToListAsync();
             return tasks;
         }
 
-        public Entities.Task GetTaskById(int id)
+        public async Task<Entities.Task?> GetTaskByIdAsync(int id)
         {
-            var task = _context.Tasks.Find(id);
+            var task = await _context.Tasks.FindAsync(id);
             return task;
         }
 
@@ -40,9 +41,9 @@ namespace TaskOrganizer.Api.Services
             _context.Tasks.Remove(task);
         }
 
-        public void SaveChanges()
+        public async Task SaveChangesAsync()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

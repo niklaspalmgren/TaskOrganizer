@@ -1,14 +1,15 @@
 ﻿using TaskOrganizer.Api.Entities;
+using Task = System.Threading.Tasks.Task;
 
 namespace TaskOrganizer.Api.Services
 {
     public interface ITaskBoardRepo
     {
-        public IEnumerable<TaskBoard> GetAllTaskBoards();
-        public TaskBoard GetTaskBoardById(int id);
+        public Task<List<TaskBoard>> GetAllTaskBoardsAsync();
+        public Task<TaskBoard?> GetTaskBoardByIdAsync(int id);
         public void CreateTaskBoard(TaskBoard taskBoard);
-        public void DeleteTaskBoardAndRelatedTasks(TaskBoard taskBoard);
-        public void SaveChanges();
+        public Task DeleteTaskBoardAndRelatedTasksAsync(TaskBoard taskBoard);
+        public Task SaveChangesAsync();
 
     }
 }

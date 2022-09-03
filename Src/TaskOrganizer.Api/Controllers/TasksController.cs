@@ -22,22 +22,22 @@ public class TasksController : ControllerBase
 
 
     [HttpGet]
-    public ActionResult<IEnumerable<TaskDto>> GetAllTasks()
+    public async Task<ActionResult<List<TaskDto>>> GetAllTasks()
     {
-        var tasksFromRepo = _taskRepo.GetAllTasks();
+        var tasksFromRepo = await _taskRepo.GetAllTasksAsync();
 
         if (tasksFromRepo == null || !tasksFromRepo.Any())
             return NotFound();
 
-        var taskDtos = _mapper.Map<IEnumerable<Entities.Task>, IEnumerable<TaskDto>>(tasksFromRepo);
+        var taskDtos = _mapper.Map<List<Entities.Task>, List<TaskDto>>(tasksFromRepo);
 
         return Ok(taskDtos);
     }
 
     [HttpGet("{id}")]
-    public ActionResult<TaskDto> GetTaskById(int id)
+    public async Task<ActionResult<TaskDto>> GetTaskById(int id)
     {
-        var taskFromRepo = _taskRepo.GetTaskById(id);
+        var taskFromRepo = await _taskRepo.GetTaskByIdAsync(id);
 
         if (taskFromRepo == null)
             return NotFound();
@@ -48,12 +48,12 @@ public class TasksController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult<TaskDto> CreateTask(TaskDto dto)
+    public async Task<ActionResult<TaskDto>> CreateTask(TaskDto dto)
     {
         var task = _mapper.Map<Entities.Task>(dto);
 
         _taskRepo.CreateTask(task);
-        _taskRepo.SaveChanges();
+        await _taskRepo.SaveChangesAsync();
 
         var taskDto = _mapper.Map<TaskDto>(task);
 
@@ -61,34 +61,34 @@ public class TasksController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public ActionResult UpdateTask(int id, TaskDto dto)
+    public async Task<ActionResult> UpdateTask(int id, TaskDto dto)
     {
         if (id != dto.Id)
             return BadRequest();
 
-        var taskFromRepo = _taskRepo.GetTaskById(id);
+        var taskFromRepo = await _taskRepo.GetTaskByIdAsync(id);
 
         if (taskFromRepo == null)
             return NotFound();
 
         // Updates our entity from db context with values from our incomming dto
         _mapper.Map(dto, taskFromRepo);
-        _taskRepo.SaveChanges();
+        await _taskRepo.SaveChangesAsync();
 
         return NoContent();
     }
 
 
     [HttpDelete("{id}")]
-    public ActionResult DeleteTask(int id)
+    public async Task<ActionResult> DeleteTask(int id)
     {
-        var taskFromRepo = _taskRepo.GetTaskById(id);
+        var taskFromRepo = await _taskRepo.GetTaskByIdAsync(id);
 
         if (taskFromRepo == null)
             return NotFound();
 
         _taskRepo.DeleteTask(taskFromRepo);
-        _taskRepo.SaveChanges();
+        await _taskRepo.SaveChangesAsync();
 
         return NoContent();
     }

@@ -13,15 +13,15 @@ namespace TaskOrganizer.Api.Services
             _context = context;
         }
 
-        public IEnumerable<TaskBoard> GetAllTaskBoards()
+        public async Task<List<TaskBoard>> GetAllTaskBoardsAsync()
         {
-            var tasks = _context.TaskBoards.Include(x => x.Tasks).ToList();
+            var tasks = await _context.TaskBoards.Include(x => x.Tasks).ToListAsync();
             return tasks;
         }
 
-        public TaskBoard GetTaskBoardById(int id)
+        public async Task<TaskBoard?> GetTaskBoardByIdAsync(int id)
         {
-            var task = _context.TaskBoards.Find(id);
+            var task = await _context.TaskBoards.FindAsync(id);
             return task;
         }
 
@@ -33,20 +33,20 @@ namespace TaskOrganizer.Api.Services
             _context.TaskBoards.Add(taskBoard);
         }
 
-        public void DeleteTaskBoardAndRelatedTasks(TaskBoard taskBoard)
+        public async System.Threading.Tasks.Task DeleteTaskBoardAndRelatedTasksAsync(TaskBoard taskBoard)
         {
             if (taskBoard == null)
                 throw new ArgumentNullException(nameof(taskBoard));
 
-            var taskBoardWithTasks = _context.TaskBoards.Include(x => x.Tasks).First(x => x.Id == taskBoard.Id);
+            var taskBoardWithTasks = await _context.TaskBoards.Include(x => x.Tasks).FirstAsync(x => x.Id == taskBoard.Id);
 
             // Will cascade delete the related tasks when context is saved.
             _context.Remove(taskBoardWithTasks);
         }
 
-        public void SaveChanges()
+        public async System.Threading.Tasks.Task SaveChangesAsync()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
 

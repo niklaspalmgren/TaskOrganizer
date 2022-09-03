@@ -21,23 +21,25 @@ namespace TaskOrganizer.Api.Controllers
             _taskBoardRepo = taskBoard;
         }
 
+        // api/tasks
         [HttpGet]
-        public ActionResult<IEnumerable<TaskBoardDto>> GetAllTaskBoards()
+        public async Task<ActionResult<List<TaskBoardDto>>> GetAllTaskBoards()
         {
-            var taskBoardsFromRepo = _taskBoardRepo.GetAllTaskBoards();
+            var taskBoardsFromRepo = await _taskBoardRepo.GetAllTaskBoardsAsync();
             
             if (taskBoardsFromRepo == null || !taskBoardsFromRepo.Any())
                 return NotFound();
 
-            var taskBoardDtos = _mapper.Map<IEnumerable<TaskBoard>, IEnumerable<TaskBoardDto>>(taskBoardsFromRepo).ToList();
+            var taskBoardDtos = _mapper.Map<List<TaskBoard>, List<TaskBoardDto>>(taskBoardsFromRepo).ToList();
 
             return Ok(taskBoardDtos);
         }
 
+        // api/tasks/3
         [HttpGet("{id}")]
-        public ActionResult<TaskBoardDto> GetTaskBoardById(int id)
+        public async Task<ActionResult<TaskBoardDto>> GetTaskBoardById(int id)
         {
-            var taskBoardFromRepo = _taskBoardRepo.GetTaskBoardById(id);
+            var taskBoardFromRepo = await _taskBoardRepo.GetTaskBoardByIdAsync(id);
 
             if (taskBoardFromRepo is null)
                 return NotFound();                
@@ -47,47 +49,50 @@ namespace TaskOrganizer.Api.Controllers
             return Ok(taskBoardDto);
         }
 
+        // api/tasks
         [HttpPost]
-        public ActionResult<TaskBoardDto> CreateTaskBoard(TaskBoardDto dto)
+        public async Task<ActionResult<TaskBoardDto>> CreateTaskBoard(TaskBoardDto dto)
         {
             var taskBoard = _mapper.Map<TaskBoard>(dto);
 
             _taskBoardRepo.CreateTaskBoard(taskBoard);
-            _taskBoardRepo.SaveChanges();
+            await _taskBoardRepo.SaveChangesAsync();
 
             var returnDto = _mapper.Map<TaskBoardDto>(taskBoard);
 
             return CreatedAtAction(nameof(GetTaskBoardById), new { returnDto.Id }, returnDto);
         }
 
+        // api/tasks/3
         [HttpPut("{id}")]
         public ActionResult UpdateTaskBoard(int id, TaskBoardDto dto)
         {
             if (id != dto.Id)
                 return BadRequest();
 
-            var taskBoardFromRepo = _taskBoardRepo.GetTaskBoardById(id);
+            var taskBoardFromRepo = _taskBoardRepo.GetTaskBoardByIdAsync(id);
 
             if (taskBoardFromRepo == null)
                 return NotFound();
 
             // Updates our entity from db context with values from our incomming dto
             _mapper.Map(dto, taskBoardFromRepo);
-            _taskBoardRepo.SaveChanges();
+            _taskBoardRepo.SaveChangesAsync();
 
             return NoContent();
         }
 
+        // api/tasks/3
         [HttpDelete("{id}")]
-        public ActionResult DeleteTaskBoardAndRelatedTasks(int id)
+        public async Task<ActionResult> DeleteTaskBoardAndRelatedTasks(int id)
         {
-            var taskBoardFromRepo = _taskBoardRepo.GetTaskBoardById(id);
+            var taskBoardFromRepo = await _taskBoardRepo.GetTaskBoardByIdAsync(id);
 
             if (taskBoardFromRepo == null)
                 return NotFound();
 
-            _taskBoardRepo.DeleteTaskBoardAndRelatedTasks(taskBoardFromRepo);
-            _taskBoardRepo.SaveChanges();
+            await _taskBoardRepo.DeleteTaskBoardAndRelatedTasksAsync(taskBoardFromRepo);
+            await _taskBoardRepo.SaveChangesAsync();
 
             return NoContent();
         }
