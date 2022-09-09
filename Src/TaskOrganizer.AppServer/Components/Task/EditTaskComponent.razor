@@ -1,0 +1,103 @@
+﻿@using TaskOrganizer.AppServer.Services
+@using TaskOrganizer.Shared
+@inject NavigationManager NavigationManager
+@inject ITaskManager TaskManager;
+
+@if (Task is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <EditForm Model="@Task" 
+              OnValidSubmit="@UpdateTaskAsync">
+
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+
+        <div class="row g-2">
+            <div class="col-md-6">
+                <label class="form-label">Name</label>
+                <InputText @ref="@NameTextInput" @bind-Value="Task.Name" class="form-control"/>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Board</label>
+                <InputSelect @bind-Value="Task.TaskBoardId" class="form-select">
+                    @foreach (var board in TaskManager.TaskBoards)
+                    {
+                        <option value="@board.Id">@board.Name</option>
+                    }
+                </InputSelect>
+            </div>
+
+            <div class="col-12">
+                <label class="form-label">Description</label>
+                <InputTextArea  @bind-Value="Task.Description" class="form-control"/>
+            </div>
+
+            <div class="col-6">
+                <button type="submit" class="btn btn-success form-control">Update</button>
+            </div>
+
+            <div class="col-6">
+                <button type="button" @onclick="@DeleteTaskAsync" class="btn btn-danger form-control">Delete</button>
+            </div>
+            <div class="col-12">
+                <button type="button" @onclick="@CancelEditAsync" class="btn btn-outline-light form-control">Cancel</button>
+            </div>
+        </div>
+
+
+    </EditForm>
+}
+
+
+@code {
+
+    [Parameter]
+    public TaskDto? Task { get; set; }
+
+    [Parameter]
+    public EventCallback OnExitEdit { get; set; }
+
+    private InputText? NameTextInput { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await SetFocusToNameTextInputAsync();
+    }
+
+    private async Task SetFocusToNameTextInputAsync()
+    {
+        if (NameTextInput?.Element is null)
+            return;
+        
+        await NameTextInput.Element.Value.FocusAsync();
+    }
+
+    private async Task UpdateTaskAsync()
+    {
+        if (Task is null)
+            return;
+
+        await TaskManager.UpdateTaskAsync(Task);
+        await OnExitEdit.InvokeAsync();
+    }
+
+    private async Task DeleteTaskAsync()
+    {
+        if (Task is null)
+            return;
+
+        await TaskManager.RemoveTaskAsync(Task);
+        await OnExitEdit.InvokeAsync();
+    }
+
+    private async Task CancelEditAsync()
+    {
+        await OnExitEdit.InvokeAsync();
+    }
+
+}

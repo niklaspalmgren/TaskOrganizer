@@ -1,0 +1,58 @@
+﻿@using TaskOrganizer.AppServer.Services
+@using TaskOrganizer.Shared
+@using TaskOrganizer.Shared.Factories
+@using System.Globalization
+@inject ITaskManager TaskManager;
+@inject ITaskBoardFactory TaskBoardFactory;
+
+
+<div class="row gy-2">
+    <div class="col">
+        <button @onclick="@CreateNewTaskBoardAsync" type="button" class="btn color-purple"><i class="bi bi-plus-lg"></i> Add Board</button>
+    </div>
+</div>
+
+@code
+{
+    private async Task CreateNewTaskBoardAsync()
+    {
+        var newTaskBoard = TaskBoardFactory.Create("Click to rename");
+        
+        var taskBoardNames = TaskManager.TaskBoards.Select(x => x.Name).ToArray();
+
+        foreach (var boardName in taskBoardNames)
+        {
+            if (!NameEndsWithSequenceNumber(boardName))
+                continue;
+            
+            newTaskBoard.Name = FormatTaskBoardName(boardName);
+        }
+        
+        await TaskManager.AddTaskBoardAsync(newTaskBoard);
+    }
+
+    private bool NameEndsWithSequenceNumber(string name)
+    {
+        var splitName = name.Split(" ");
+        var possibleSequenceNumber = splitName.LastOrDefault();
+
+        return int.TryParse(possibleSequenceNumber, out _);
+    }
+    
+    private string FormatTaskBoardName(string oldTaskBoardName)
+    {
+        var splitStr = oldTaskBoardName.Split(" ");
+        var possibleSequenceNumber = splitStr.LastOrDefault();
+
+        int.TryParse(possibleSequenceNumber, out var sequenceNumber);
+        
+        var index = Array.IndexOf(splitStr, possibleSequenceNumber);
+
+        // Update sequence number
+        sequenceNumber++;
+        splitStr[index] = sequenceNumber.ToString();
+
+        return string.Join(" ", splitStr);
+    }
+
+}

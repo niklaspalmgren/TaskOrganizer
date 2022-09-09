@@ -30,7 +30,7 @@ namespace TaskOrganizer.Api.Controllers
             if (taskBoardsFromRepo == null || !taskBoardsFromRepo.Any())
                 return NotFound();
 
-            var taskBoardDtos = _mapper.Map<List<TaskBoard>, List<TaskBoardDto>>(taskBoardsFromRepo).ToList();
+            var taskBoardDtos = _mapper.Map<List<TaskBoard>, List<TaskBoardDto>>(taskBoardsFromRepo);
 
             return Ok(taskBoardDtos);
         }
@@ -65,19 +65,19 @@ namespace TaskOrganizer.Api.Controllers
 
         // api/tasks/3
         [HttpPut("{id}")]
-        public ActionResult UpdateTaskBoard(int id, TaskBoardDto dto)
+        public async Task<ActionResult> UpdateTaskBoard(int id, TaskBoardDto dto)
         {
             if (id != dto.Id)
                 return BadRequest();
 
-            var taskBoardFromRepo = _taskBoardRepo.GetTaskBoardByIdAsync(id);
+            var taskBoardFromRepo = await _taskBoardRepo.GetTaskBoardByIdAsync(id);
 
             if (taskBoardFromRepo == null)
                 return NotFound();
 
-            // Updates our entity from db context with values from our incomming dto
+            // Updates our entity from db context with values from our incoming dto
             _mapper.Map(dto, taskBoardFromRepo);
-            _taskBoardRepo.SaveChangesAsync();
+            await _taskBoardRepo.SaveChangesAsync();
 
             return NoContent();
         }

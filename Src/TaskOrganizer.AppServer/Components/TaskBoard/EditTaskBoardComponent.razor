@@ -1,0 +1,74 @@
+﻿@using TaskOrganizer.Shared
+@inject ITaskManager TaskManager;
+
+@if (TaskBoard is not null)
+{
+    <EditForm Model="@TaskBoard" OnValidSubmit="@UpdateTaskBoardAsync">
+
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+
+        <InputText @ref="NameInputField"
+                   id="name"
+                   @bind-Value="@TaskBoard.Name"
+                   class="form-control"
+                   @onfocusout="@ResetAsync"/>
+    </EditForm>
+}
+
+@code {
+
+    [Parameter]
+    public TaskBoardDto? TaskBoard { get; init; }
+    
+    [Parameter]
+    public EventCallback OnExitEditMode { get; set; }
+
+    private InputText? NameInputField { get; set; }
+    
+    private string OldName = string.Empty;
+
+    private bool HasUpdated { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var focusTries = 0;
+        
+        OldName = TaskBoard.Name;
+        
+
+        while (NameInputField is null || focusTries < 5)
+        {
+            await Task.Delay(50);
+            focusTries++;
+        }
+
+        // Focus element
+        if (NameInputField?.Element is not null)
+            await NameInputField.Element.Value.FocusAsync();
+    }
+
+    private async Task UpdateTaskBoardAsync()
+    {
+        if (TaskBoard is null)
+            return;
+        
+        await TaskManager.UpdateTaskBoardAsync(TaskBoard);
+
+        HasUpdated = true;
+        
+        await OnExitEditMode.InvokeAsync();
+    }
+
+    private async Task ResetAsync()
+    {
+        if (!HasUpdated)
+        {
+            // Reset back to old name
+            TaskBoard.Name = OldName;
+        }
+        
+        await OnExitEditMode.InvokeAsync();
+    }
+
+}

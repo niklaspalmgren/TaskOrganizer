@@ -15,14 +15,18 @@ namespace TaskOrganizer.Api.Services
 
         public async Task<List<TaskBoard>> GetAllTaskBoardsAsync()
         {
-            var tasks = await _context.TaskBoards.Include(x => x.Tasks).ToListAsync();
+            var tasks = await _context.TaskBoards
+                .Include(x => x.Tasks)
+                .ToListAsync();
             return tasks;
         }
 
         public async Task<TaskBoard?> GetTaskBoardByIdAsync(int id)
         {
-            var task = await _context.TaskBoards.FindAsync(id);
-            return task;
+            var taskBoard = await _context.TaskBoards
+                .Include(x => x.Tasks)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            return taskBoard;
         }
 
         public void CreateTaskBoard(TaskBoard taskBoard)

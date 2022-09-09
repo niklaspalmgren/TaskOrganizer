@@ -11,6 +11,15 @@ namespace TaskOrganizer.AppServer.Services
             _clientFactory = clientFactory;
         }
 
+        public async Task<TaskDto> GetTask(int id)
+        {
+            var httpClient = _clientFactory.CreateClient("Tasks");
+            var uri = $"{id}";
+            var task = await httpClient.GetFromJsonAsync<TaskDto>(uri);
+
+            return task;
+        }
+
         public async Task<List<TaskDto>> GetAllTasksAsync()
         {
             var httpClient = _clientFactory.CreateClient("Tasks");
@@ -44,5 +53,7 @@ namespace TaskOrganizer.AppServer.Services
 
             await httpClient.DeleteAsync(uri);
         }
+
+        
     }
 }

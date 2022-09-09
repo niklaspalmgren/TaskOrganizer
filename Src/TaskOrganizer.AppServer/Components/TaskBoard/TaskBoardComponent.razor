@@ -1,0 +1,121 @@
+﻿@using TaskOrganizer.AppServer.DragDrop
+@using TaskOrganizer.Shared
+@using TaskOrganizer.AppServer.Services
+@using TaskOrganizer.AppServer.Components.Task
+@inject ITaskManager TaskManager;
+@inject IDragDropService DragDropService;
+
+@if (TaskBoard is not null)
+{
+    <DropZoneComponent DropHandler="@dropHandler">
+        <div class="task-board p-2 mb-4 shadow">
+            <div class="row gy-2 mb-2 justify-content-between">
+                <div class="col">
+                    @if (InEditMode)
+                    {
+                        <EditTaskBoardComponent TaskBoard="@TaskBoard" OnExitEditMode="() => InEditMode = false"/>
+                    }
+                    else
+                    {
+                        <h3 class="task-board-name"
+                            @onclick="@EnterTaskBoardEditMode">
+                            @TaskBoard.Name
+                        </h3>
+                    }
+
+                </div>
+                @if (!InEditMode)
+                {
+                    <div class="col-auto">
+                        <i class="fs-5 bi bi-trash delete-taskboard-button cursor-hand" @onclick="DeleteTaskBoardAsync"></i>
+                    </div>
+                }
+            </div>
+
+            @if (InNewTaskMode)
+            {
+                <div class="row gy-2" id="newTaskRow">
+                    <div class="col">
+                        <NewTaskComponent TaskBoardId="@TaskBoard.Id" ExitNewTask="() => InNewTaskMode = false"/>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row gy-2">
+                    <div class="col d-grid">
+                        <button class="btn btn-light" @onclick="@EnterNewTaskMode">
+                            <i class="bi bi-plus-lg"></i> Add Task
+                        </button>
+                    </div>
+                </div>
+            }
+
+            @foreach (var task in TaskBoard.Tasks)
+            {
+                <div class="row mt-2">
+                    <div class="col">
+                        <TaskComponent Task="@task"/>
+                    </div>
+                </div>
+            }
+        </div>
+
+    </DropZoneComponent>
+}
+
+
+
+@code {
+
+    [Parameter]
+    public TaskBoardDto? TaskBoard { get; set; }
+
+    private bool InNewTaskMode { get; set; } = false;
+
+    private bool IsDeleteButtonVisible { get; set; }
+
+    private bool InEditMode { get; set; }
+
+    private IDragDropHandler dropHandler { get; set; }
+
+    protected override void OnInitialized()
+    {
+        dropHandler = new DropHandler(DropTask, "task");
+    }
+
+    private void EnterNewTaskMode()
+    {
+        InNewTaskMode = true;
+    }
+
+    private void ExitNewTaskMode()
+    {
+        InNewTaskMode = false;
+    }
+
+    private async Task DeleteTaskBoardAsync()
+    {
+        if (TaskBoard is null)
+            return;
+        
+        await TaskManager.RemoveTaskBoardAsync(TaskBoard);
+    }
+
+    private async Task DropTask(object payLoad)
+    {
+        if (payLoad is not TaskDto task)
+            return;
+
+        // Update task
+        task.TaskBoardId = TaskBoard.Id;
+        await TaskManager.UpdateTaskAsync(task);
+    }
+
+
+    private void EnterTaskBoardEditMode()
+    {
+        InEditMode = true;
+    }
+
+}

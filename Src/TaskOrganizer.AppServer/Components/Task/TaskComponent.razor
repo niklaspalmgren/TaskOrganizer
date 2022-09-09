@@ -1,0 +1,59 @@
+﻿@using TaskOrganizer.AppServer.DragDrop
+@using TaskOrganizer.Shared
+@using TaskOrganizer.AppServer.Services
+@inject ITaskManager TaskManager;
+@inject IDragDropService dragDropService;
+
+@if (InEditMode)
+{
+    <div class="card task">
+        <div class="card-body">
+            <EditTaskComponent Task="@Task" OnExitEdit="() => InEditMode = false"/>
+        </div>
+    </div>
+}
+else
+{
+    <DraggableComponent DragHandler="@dragHandler">
+        <div class="card task"
+             @onclick="() => InEditMode = true">
+            <div class="card-body">
+                <h5 class="card-title">@Task.Name</h5>
+                <p class="card-text text-muted">@Task.Description</p>
+            </div>
+        </div>
+    </DraggableComponent>
+}
+
+
+
+@code {
+
+    [Parameter]
+    public TaskDto? Task { get; set; }
+
+    [Parameter]
+    public EventCallback<TaskDto> OnDeleted { get; set; }
+
+    [Parameter]
+    public EventCallback<TaskDto> OnTaskChangedBoard { get; set; }
+
+    private bool InEditMode { get; set; }
+
+    private IDragDropHandler dragHandler { get; set; }
+
+    protected override void OnInitialized()
+    {
+        dragHandler = new DragHandler(DropTask, Task, "task");
+        base.OnInitialized();
+    }
+
+    private async Task DropTask(object payLoad)
+    {
+        if (payLoad is not TaskDto task)
+            return;
+
+        await OnDeleted.InvokeAsync(task);
+    }
+
+}

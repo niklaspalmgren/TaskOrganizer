@@ -1,0 +1,55 @@
+﻿@using TaskOrganizer.AppServer.Services
+@inject IDragDropService DragAndDropService
+
+<div ondragover="event.preventDefault()"
+     class="@dropZoneClass"
+     @ondrop="@OnDropAsync"
+     @ondragenter="@OnDragEnter"
+     @ondragleave="@OnDragLeave">
+    @ChildContent
+</div>
+
+@code {
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public IDragDropHandler DropHandler { get; set; }
+
+    private string dropZoneClass = string.Empty;
+
+    private int counter;
+
+    async Task OnDropAsync()
+    {
+        counter = 0;
+        dropZoneClass = string.Empty;
+
+        if (DropHandler.DropTask is not null && DragAndDropService.Accepts(DropHandler))
+        {
+            await DragAndDropService.HandleDropAsync();
+        }
+    }
+
+    void OnDragEnter()
+    {
+        counter++;
+
+        dropZoneClass = "accepts-drop";
+        DragAndDropService.SetDropTarget(DropHandler);
+    }
+
+    void OnDragLeave()
+    {
+        counter--;
+
+        if (counter == 0)
+        {
+            dropZoneClass = string.Empty;
+            DragAndDropService.RemoveDropTarget();
+        }
+
+    }
+
+}

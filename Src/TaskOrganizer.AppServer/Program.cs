@@ -1,3 +1,4 @@
+using TaskOrganizer.AppServer;
 using TaskOrganizer.AppServer.Services;
 using TaskOrganizer.Shared.Factories;
 
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddLogging(opt => opt.AddConsole());
 
 // Http client configurations
 builder.Services.AddHttpClient("default", c =>
@@ -23,6 +25,8 @@ builder.Services.AddHttpClient("TaskBoards", c =>
     c.BaseAddress = new Uri(builder.Configuration.GetValue<string>("TaskBoardsApiBaseUri"));
 });
 
+builder.Services.AddScoped<ITaskManager, TaskManager>();
+builder.Services.AddSingleton<IDragDropService, DragDropService>();
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<ITaskBoardService, TaskBoardService>();
 builder.Services.AddScoped<ITaskBoardFactory, TaskBoardFactory>();

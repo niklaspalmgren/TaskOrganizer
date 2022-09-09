@@ -1,8 +1,7 @@
-﻿@using TaskOrganizer.AppServer.Services
-@using TaskOrganizer.Shared
+﻿@using TaskOrganizer.Shared
 @using TaskOrganizer.Shared.Factories
-@inject ITaskFactory taskFactory;
-@inject ITaskService taskService;
+@inject ITaskFactory TaskFactory;
+@inject ITaskManager TaskManager;
 
 <div class="card task shadow">
     <div class="card-body">
@@ -42,35 +41,32 @@
 </div>
 
 @code {
+    
     [Parameter]
     public int TaskBoardId { get; set; }
 
     [Parameter]
-    public EventCallback<TaskDto> OnNewTaskCreated { get; set; }
+    public EventCallback ExitNewTask { get; set; }
 
-    [Parameter]
-    public EventCallback OnNewTaskCanceled { get; set; }
-
-    protected TaskDto Task { get; set; }
+    private TaskDto? Task { get; set; }
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        Task = taskFactory.Create(TaskBoardId);
+        Task = TaskFactory.Create(TaskBoardId);
     }
 
     private async Task CancelAsync()
     {
-        await OnNewTaskCanceled.InvokeAsync();
+        await ExitNewTask.InvokeAsync();
     }
 
     private async Task CreateTaskAsync()
     {
-        var createdTask = await taskService.CreateTaskAsync(Task);
-
-        if (createdTask == null)
+        if (Task is null)
             return;
-
-        await OnNewTaskCreated.InvokeAsync(createdTask);
+        
+        await TaskManager.AddTaskAsync(Task);
+        await ExitNewTask.InvokeAsync();
     }
 }

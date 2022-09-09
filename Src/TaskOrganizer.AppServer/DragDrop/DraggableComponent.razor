@@ -1,0 +1,21 @@
+﻿@using TaskOrganizer.AppServer.Services
+@inject IDragDropService DragAndDropService
+
+<div draggable="true" @ondragstart="@OnDragStart">
+    @ChildContent
+</div>
+
+@code {
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public IDragDropHandler DragHandler { get; set; }
+
+    void OnDragStart()
+    {
+        DragAndDropService.StartDrag(DragHandler);
+    }
+
+}
