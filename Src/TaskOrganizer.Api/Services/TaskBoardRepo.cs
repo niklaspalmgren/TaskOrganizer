@@ -13,12 +13,30 @@ namespace TaskOrganizer.Api.Services
             _context = context;
         }
 
-        public async Task<List<TaskBoard>> GetAllTaskBoardsAsync()
+        public async Task<List<TaskBoard>> GetTaskBoardsAsync(string filter)
         {
-            var tasks = await _context.TaskBoards
-                .Include(x => x.Tasks)
-                .ToListAsync();
+            var queryable = _context.TaskBoards.AsQueryable<TaskBoard>();
+
+            queryable = AddFilterToQueryable(filter, queryable);
+
+            var tasks = await queryable.ToListAsync();
+
             return tasks;
+        }
+
+        private static IQueryable<TaskBoard> AddFilterToQueryable(string filter, IQueryable<TaskBoard> queryable)
+        {
+
+            if (!string.IsNullOrWhiteSpace(filter))
+            {
+                queryable = queryable.Include(x => x.Tasks.Where(y => y.Name.Contains(filter) || y.Description.Contains(filter)));
+            }
+            else
+            {
+                queryable = queryable.Include(x => x.Tasks);
+            }
+
+            return queryable;
         }
 
         public async Task<TaskBoard?> GetTaskBoardByIdAsync(int id)

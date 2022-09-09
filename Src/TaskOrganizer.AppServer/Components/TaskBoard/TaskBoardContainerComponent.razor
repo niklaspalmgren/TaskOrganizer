@@ -15,9 +15,16 @@ else
         <div class="col-auto color-purple">
             <h3>Task Manager</h3>
         </div>
-        
+
         <div class="col-auto">
-            <NewTaskBoardComponent/>
+            <NewTaskBoardComponent />
+        </div>
+
+        <div class="col-auto">
+            <input class="form-control form-control-sm"
+               value="@TaskManager.FilterString"
+               @oninput="HandleSearch"
+               placeholder="Search" />
         </div>
     </div>
 
@@ -32,17 +39,32 @@ else
     </div>
 }
 
-
 @code {
+    
 
     protected override async Task OnInitializedAsync()
     {
-        await TaskManager.LoadTaskBoardsAsync();
+        await LoadTasksAsync();
         TaskManager.OnChange += StateHasChanged;
     }
 
     public void Dispose()
     {
         TaskManager.OnChange -= StateHasChanged;
+    }
+
+    private async Task HandleSearch(ChangeEventArgs args)
+    {
+        if (args.Value is null)
+            return;
+
+        TaskManager.FilterString = args.Value.ToString();
+
+        await LoadTasksAsync(TaskManager.FilterString);
+    }
+
+    private async Task LoadTasksAsync(string filter = "")
+    {
+        await TaskManager.LoadTaskBoardsAsync(filter);
     }
 }

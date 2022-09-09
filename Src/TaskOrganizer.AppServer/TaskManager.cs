@@ -7,6 +7,9 @@ namespace TaskOrganizer.AppServer
     {
         List<TaskBoardDto> TaskBoards { get; }
 
+        bool IsUsingFilter { get; }
+        string FilterString { get; set; }
+
         event Action? OnChange;
 
         // Tasks
@@ -16,7 +19,7 @@ namespace TaskOrganizer.AppServer
         Task AddTaskAsync(TaskDto taskDto);
         
         // Task boards
-        Task LoadTaskBoardsAsync();
+        Task LoadTaskBoardsAsync(string filter);
         Task UpdateTaskBoardAsync(TaskBoardDto taskBoard);
         Task RemoveTaskBoardAsync(TaskBoardDto taskBoard);
         Task AddTaskBoardAsync(TaskBoardDto taskBoardDto);
@@ -26,6 +29,10 @@ namespace TaskOrganizer.AppServer
     {
         private readonly ITaskBoardService _taskBoardService;
         private readonly ITaskService _taskService;
+
+        public bool IsUsingFilter => !string.IsNullOrWhiteSpace(FilterString);
+
+        public string FilterString { get; set; } = string.Empty;
 
         public TaskManager(ITaskBoardService taskBoardService, ITaskService taskService)
         {
@@ -40,9 +47,9 @@ namespace TaskOrganizer.AppServer
             return TaskBoards.FirstOrDefault(x => x.Id == id);
         }
 
-        public async Task LoadTaskBoardsAsync()
+        public async Task LoadTaskBoardsAsync(string filter)
         {
-            TaskBoards = await _taskBoardService.GetAllTaskBoardsAsync();
+            TaskBoards = await _taskBoardService.GetTaskBoardsAsync(filter);
         }
 
         /// <summary>

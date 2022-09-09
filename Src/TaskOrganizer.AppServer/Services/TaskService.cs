@@ -20,7 +20,7 @@ namespace TaskOrganizer.AppServer.Services
             return task;
         }
 
-        public async Task<List<TaskDto>> GetAllTasksAsync()
+        public async Task<List<TaskDto>> GetTasksAsync()
         {
             var httpClient = _clientFactory.CreateClient("Tasks");
             var tasks = await httpClient.GetFromJsonAsync<List<TaskDto>>(string.Empty);

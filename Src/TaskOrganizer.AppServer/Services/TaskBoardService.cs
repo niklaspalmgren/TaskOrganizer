@@ -11,12 +11,15 @@ namespace TaskOrganizer.AppServer.Services
             _clientFactory = clientFactory;
         }
 
-        public async Task<List<TaskBoardDto>> GetAllTaskBoardsAsync()
+        public async Task<List<TaskBoardDto>> GetTaskBoardsAsync(string filter)
         {
             var httpClient = _clientFactory.CreateClient("TaskBoards");
-            var tasks = await httpClient.GetFromJsonAsync<List<TaskBoardDto>>(string.Empty);
 
-            return tasks ?? new List<TaskBoardDto>();
+            var uri = $"?filter={filter}";
+
+            var taskBoards = await httpClient.GetFromJsonAsync<List<TaskBoardDto>>(uri);
+
+            return taskBoards ?? new List<TaskBoardDto>();
         }
 
         public async Task<TaskBoardDto> CreateTaskBoardAsync(TaskBoardDto taskBoardDto)

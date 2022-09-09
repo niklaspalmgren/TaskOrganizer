@@ -23,9 +23,9 @@ namespace TaskOrganizer.Api.Controllers
 
         // api/tasks
         [HttpGet]
-        public async Task<ActionResult<List<TaskBoardDto>>> GetAllTaskBoards()
+        public async Task<ActionResult<List<TaskBoardDto>>> GetTaskBoards([FromQuery] string? filter)
         {
-            var taskBoardsFromRepo = await _taskBoardRepo.GetAllTaskBoardsAsync();
+            var taskBoardsFromRepo = await _taskBoardRepo.GetTaskBoardsAsync(filter);
             
             if (taskBoardsFromRepo == null || !taskBoardsFromRepo.Any())
                 return NotFound();

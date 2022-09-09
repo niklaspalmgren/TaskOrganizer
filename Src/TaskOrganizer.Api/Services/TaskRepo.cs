@@ -13,7 +13,7 @@ namespace TaskOrganizer.Api.Services
         }
 
 
-        public async Task<List<Entities.Task>> GetAllTasksAsync()
+        public async Task<List<Entities.Task>> GetTasksAsync()
         {
             var tasks = await _context.Tasks.ToListAsync();
             return tasks;

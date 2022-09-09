@@ -9,13 +9,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskOrganizer.Api", "Src\TaskOrganizer.Api\TaskOrganizer.Api.csproj", "{1271518E-D929-495A-AE4B-44383D4829E3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskOrganizer.AppServer", "Src\TaskOrganizer.AppServer\TaskOrganizer.AppServer.csproj", "{96774C8E-4663-47D4-BF8E-51D6BF0D5C93}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskOrganizer.Shared", "Src\TaskOrganizer.Shared\TaskOrganizer.Shared.csproj", "{27D0E55A-B717-4293-AD5E-CD181C17EA10}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{2563CA71-B072-4A29-8B75-101EF31CC665}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6D84C5B3-F4AB-41F1-9C16-DDECA8FD8A0D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskOrganizer.AppServer", "Src\TaskOrganizer.AppServer\TaskOrganizer.AppServer.csproj", "{D8E25DB0-D418-4062-A498-534D3DCF3CF7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,22 +27,22 @@ Global
 		{1271518E-D929-495A-AE4B-44383D4829E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1271518E-D929-495A-AE4B-44383D4829E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1271518E-D929-495A-AE4B-44383D4829E3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{96774C8E-4663-47D4-BF8E-51D6BF0D5C93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{96774C8E-4663-47D4-BF8E-51D6BF0D5C93}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{96774C8E-4663-47D4-BF8E-51D6BF0D5C93}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{96774C8E-4663-47D4-BF8E-51D6BF0D5C93}.Release|Any CPU.Build.0 = Release|Any CPU
 		{27D0E55A-B717-4293-AD5E-CD181C17EA10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{27D0E55A-B717-4293-AD5E-CD181C17EA10}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27D0E55A-B717-4293-AD5E-CD181C17EA10}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27D0E55A-B717-4293-AD5E-CD181C17EA10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8E25DB0-D418-4062-A498-534D3DCF3CF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8E25DB0-D418-4062-A498-534D3DCF3CF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8E25DB0-D418-4062-A498-534D3DCF3CF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8E25DB0-D418-4062-A498-534D3DCF3CF7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{1271518E-D929-495A-AE4B-44383D4829E3} = {2563CA71-B072-4A29-8B75-101EF31CC665}
-		{96774C8E-4663-47D4-BF8E-51D6BF0D5C93} = {2563CA71-B072-4A29-8B75-101EF31CC665}
 		{27D0E55A-B717-4293-AD5E-CD181C17EA10} = {2563CA71-B072-4A29-8B75-101EF31CC665}
+		{D8E25DB0-D418-4062-A498-534D3DCF3CF7} = {2563CA71-B072-4A29-8B75-101EF31CC665}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6D2A7EFB-F174-4846-B0BD-1295DC237A97}

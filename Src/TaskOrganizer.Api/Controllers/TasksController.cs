@@ -22,9 +22,9 @@ public class TasksController : ControllerBase
 
 
     [HttpGet]
-    public async Task<ActionResult<List<TaskDto>>> GetAllTasks()
+    public async Task<ActionResult<List<TaskDto>>> GetTasks()
     {
-        var tasksFromRepo = await _taskRepo.GetAllTasksAsync();
+        var tasksFromRepo = await _taskRepo.GetTasksAsync();
 
         if (tasksFromRepo == null || !tasksFromRepo.Any())
             return NotFound();
