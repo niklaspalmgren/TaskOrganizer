@@ -9,7 +9,7 @@ namespace TaskOrganizer.Api.Profiles
         {
             CreateMap<Entities.Task, TaskDto>();
 
-            // Could create seperate dto's for read/create/update etc.. but for simplicity sake.
+            // Could create separate dto for read/create/update etc.. but for simplicity sake.
             CreateMap<TaskDto, Entities.Task>().ForMember(x => x.Id, opt => opt.Ignore());
         }
     }

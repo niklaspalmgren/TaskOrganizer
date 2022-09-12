@@ -20,6 +20,7 @@ else
             <div class="card-body">
                 <h5 class="card-title">@Task.Name</h5>
                 <p class="card-text text-muted">@Task.Description</p>
+                <p class="badge @BadgeBgClass">@Task.Category</p>
             </div>
         </div>
     </DraggableComponent>
@@ -37,6 +38,8 @@ else
 
     [Parameter]
     public EventCallback<TaskDto> OnTaskChangedBoard { get; set; }
+
+    string BadgeBgClass => GetBadgeBg(Task);
 
     private bool InEditMode { get; set; }
 
@@ -56,4 +59,15 @@ else
         await OnDeleted.InvokeAsync(task);
     }
 
-}
+    private string GetBadgeBg(TaskDto task)
+    {
+        return task.Category switch
+        {
+            TaskCategory.Bug => "bg-danger",
+            TaskCategory.Feature => "bg-warning",
+            TaskCategory.ChangeRequest => "bg-purple",
+            _ => throw new ArgumentOutOfRangeException()
+            };
+    }
+    
+    } 

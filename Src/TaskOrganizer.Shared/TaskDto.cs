@@ -13,8 +13,12 @@ namespace TaskOrganizer.Shared
 
         [StringLength(200)]
         public string Description { get; set; } = string.Empty;
+        
+        [Required]
+        public TaskCategory Category { get; set; }
 
         [Required]
         public int TaskBoardId { get; set; }
+        
     }
 }

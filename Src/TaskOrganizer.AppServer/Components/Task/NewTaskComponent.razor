@@ -6,31 +6,41 @@
 <div class="card task shadow">
     <div class="card-body">
         <EditForm Model="@Task" OnValidSubmit="@CreateTaskAsync">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
+
+            <DataAnnotationsValidator/>
+            <ValidationSummary/>
 
             <div class="form-group row">
-                <label class="col-form-label">Name</label>
+                <label class="col-form-label-sm">Name</label>
                 <div class="col">
-                    <InputText id="name" @bind-Value="Task.Name" class="form-control" />
+                    <InputText id="name" @bind-Value="Task.Name" class="form-control form-control-sm"/>
                 </div>
-
             </div>
 
             <div class="form-group row">
-                <label class="col-form-label">Description</label>
+                <label class="col-form-label-sm">Description</label>
                 <div class="col">
-                    <InputTextArea id="description" @bind-Value="Task.Description" class="form-control" />
+                    <InputTextArea id="description" @bind-Value="Task.Description" class="form-control form-control-sm"/>
                 </div>
+            </div>
 
+            <div class="form-group row">
+                <label class="col-form-label-sm">Category</label>
+                <div class="col">
+                    <InputSelect @bind-Value="Task.Category" class="form-select form-select-sm">
+                        <option value="@TaskCategory.Bug">Bug</option>
+                        <option value="@TaskCategory.Feature">Feature</option>
+                        <option value="@TaskCategory.ChangeRequest">Change Request</option>
+                    </InputSelect>
+                </div>
             </div>
 
             <div class="form-group row mt-4">
                 <div class="col">
-                    <button type="submit" class="btn btn-success form-control">Add Task</button>
+                    <button type="submit" class="btn btn-success form-control form-control-sm">Add Task</button>
                 </div>
                 <div class="col">
-                    <button type="button" @onclick="@CancelAsync" class="btn btn-outline-light form-control">Cancel</button>
+                    <button type="button" @onclick="@CancelAsync" class="btn btn-outline-light form-control form-control-sm">Cancel</button>
                 </div>
             </div>
 
@@ -41,7 +51,7 @@
 </div>
 
 @code {
-    
+
     [Parameter]
     public int TaskBoardId { get; set; }
 
@@ -65,8 +75,9 @@
     {
         if (Task is null)
             return;
-        
+
         await TaskManager.AddTaskAsync(Task);
         await ExitNewTask.InvokeAsync();
     }
+
 }
