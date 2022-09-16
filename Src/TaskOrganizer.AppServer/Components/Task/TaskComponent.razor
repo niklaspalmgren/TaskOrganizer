@@ -24,11 +24,11 @@ else
                 <h5 class="card-title text-truncate">@Task.Name</h5>
                 <p class="card-text text-muted">@Task.Description</p>
 
-                <div class="row card-text">
-                    <div class="col">
-                        <span class="badge @BadgeBgClass">@Task.Category</span>
+                <div class="row justify-content-between card-text">
+                    <div class="col-auto">
+                        <span class="badge @BadgeBgClass">@Task.Category.GetEnumDisplayName()</span>
                     </div>
-                    <div class="col text-end">
+                    <div class="col-auto text-end">
                         @if (Task.UserId is not null)
                         {
                             <UserNameComponent UserId="@Task.UserId" />
@@ -110,7 +110,7 @@ else
         {
             TaskCategory.Bug => "bg-danger",
             TaskCategory.Feature => "bg-warning",
-            TaskCategory.ChangeRequest => "bg-purple",
+            TaskCategory.Change => "tm-bg-accent",
             _ => throw new ArgumentOutOfRangeException()
         };
     }
