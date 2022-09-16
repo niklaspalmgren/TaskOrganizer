@@ -54,6 +54,11 @@ else
             </div>
 
             <div class="col-12">
+                <InputCheckbox @bind-Value="Task.IsCompleted" class="form-check-input" />
+                <label class="form-check-label">Completed</label>
+            </div>
+
+            <div class="col-12">
                 <label class="form-label-sm">Description</label>
                 <InputTextArea @bind-Value="Task.Description" class="form-control form-control-sm" />
             </div>

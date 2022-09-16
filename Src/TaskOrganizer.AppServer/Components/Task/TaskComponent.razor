@@ -9,7 +9,7 @@
     <div class="card task">
         <div class="card-body">
             <EditTaskComponent Task="@Task"
-                           OnUpdated="() => InEditMode = false"
+                           OnUpdated="HandleTaskUpdatedAsync"
                            OnCanceled="() => InEditMode = false"
                            OnDeleted="HandleTaskDeletedAsync" />
         </div>
@@ -18,7 +18,7 @@
 else
 {
     <DraggableComponent DragHandler="@dragHandler">
-        <div class="card task"
+        <div class="card task @DisabledClass"
          @onclick="() => InEditMode = true">
             <div class="card-body">
                 <h5 class="card-title text-truncate">@Task.Name</h5>
@@ -56,9 +56,10 @@ else
     public EventCallback<int> OnDeleted { get; set; }
 
     [Parameter]
-    public EventCallback<TaskDto> OnTaskChangedBoard { get; set; }
+    public EventCallback<TaskDto> OnUpdated { get; set; }
 
-    string BadgeBgClass => GetBadgeBg(Task);
+    string BadgeBgClass => GetBadgeClassName(Task);
+    string DisabledClass => GetDisabledClassName(Task);
 
     private bool InEditMode { get; set; }
 
@@ -68,6 +69,12 @@ else
     {
         dragHandler = new DragHandler(DropTask, Task, "task");
         await base.OnInitializedAsync();
+    }
+
+    private async Task HandleTaskUpdatedAsync()
+    {
+        InEditMode = false;
+        await OnUpdated.InvokeAsync();
     }
 
     private async Task HandleTaskDeletedAsync(int id)
@@ -84,7 +91,16 @@ else
         await OnDeleted.InvokeAsync(task.Id);
     }
 
-    private string GetBadgeBg(TaskDto? task)
+    private string GetDisabledClassName(TaskDto? task)
+    {
+        if (task is null || !task.IsCompleted)
+            return string.Empty;
+
+
+        return "text-decoration-line-through bg-light";
+    }
+
+    private string GetBadgeClassName(TaskDto? task)
     {
         if (task is null)
             return string.Empty;

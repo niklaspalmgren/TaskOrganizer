@@ -18,6 +18,9 @@ namespace TaskOrganizer.Shared
         public TaskCategory Category { get; set; }
 
         [Required]
+        public bool IsCompleted { get; set; }
+
+        [Required]
         public int TaskBoardId { get; set; }
 
         public int? UserId { get; set; }

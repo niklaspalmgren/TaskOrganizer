@@ -12,7 +12,7 @@
 {
     <DropZoneComponent DropHandler="@dropHandler">
         <div class="task-board p-2">
-            <div class="row gy-2 mb-2 justify-content-between">
+            <div class="row">
                 <div class="col">
                     @if (InEditMode)
                     {
@@ -33,6 +33,13 @@
                         <i class="fs-6 bi bi-trash delete-taskboard-button cursor-hand" @onclick="DeleteTaskBoardAsync"></i>
                     </div>
                 }
+            </div>
+            <div class="row mb-2">
+                <div class="col">
+                    <small class="text-light" data-toggle="tooltip" data-placement="bottom" title="@CompletedTasksCount of @Tasks.Count tasks completed.">
+                        @CompletedTasksCount/@Tasks.Count
+                    </small>
+                </div>
             </div>
 
             @if (InNewTaskMode)
@@ -58,7 +65,7 @@
             {
                 <div class="row mt-2">
                     <div class="col">
-                        <TaskComponent Task="@task" OnDeleted="RemoveTask" />
+                        <TaskComponent Task="@task" OnDeleted="RemoveTask" OnUpdated="() => StateHasChanged()" />
                     </div>
                 </div>
             }
@@ -82,6 +89,8 @@
     private bool InNewTaskMode { get; set; } = false;
 
     private bool IsDeleteButtonVisible { get; set; }
+
+    private int CompletedTasksCount => Tasks.Where(x => x.IsCompleted).Count();
 
     private bool InEditMode { get; set; }
 

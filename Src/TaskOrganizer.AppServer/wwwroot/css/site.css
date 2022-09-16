@@ -24,7 +24,7 @@ a, .btn-link {
 
 
 .task {
-    background: #fff;
+    background-color: #fff;
     border-width: 0px;
 }
 
@@ -50,6 +50,7 @@ a, .btn-link {
 .task-board-name {
     color: #ddb8e1;
     cursor: pointer;
+    margin: 0px;
 }
 
 .delete-taskboard-button {
