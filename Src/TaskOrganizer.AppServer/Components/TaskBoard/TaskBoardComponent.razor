@@ -2,32 +2,35 @@
 @using TaskOrganizer.Shared
 @using TaskOrganizer.AppServer.Services
 @using TaskOrganizer.AppServer.Components.Task
-@inject ITaskManager TaskManager;
+@implements IDisposable
+@inject ISearchTasksService SearchTasksService;
+@inject ITaskService TaskService;
+@inject ITaskBoardService TaskBoardService;
 @inject IDragDropService DragDropService;
 
 @if (TaskBoard is not null)
 {
     <DropZoneComponent DropHandler="@dropHandler">
-        <div class="task-board p-2 mb-4 shadow">
+        <div class="task-board p-2">
             <div class="row gy-2 mb-2 justify-content-between">
                 <div class="col">
                     @if (InEditMode)
                     {
-                        <EditTaskBoardComponent TaskBoard="@TaskBoard" OnExitEditMode="() => InEditMode = false"/>
+                        <EditTaskBoardComponent TaskBoard="@TaskBoard" OnExitEditMode="() => InEditMode = false" />
                     }
                     else
                     {
-                        <h3 class="task-board-name"
-                            @onclick="@EnterTaskBoardEditMode">
+                        <h5 class="task-board-name"
+                    @onclick="@EnterTaskBoardEditMode">
                             @TaskBoard.Name
-                        </h3>
+                        </h5>
                     }
 
                 </div>
                 @if (!InEditMode)
                 {
                     <div class="col-auto">
-                        <i class="fs-5 bi bi-trash delete-taskboard-button cursor-hand" @onclick="DeleteTaskBoardAsync"></i>
+                        <i class="fs-6 bi bi-trash delete-taskboard-button cursor-hand" @onclick="DeleteTaskBoardAsync"></i>
                     </div>
                 }
             </div>
@@ -36,11 +39,11 @@
             {
                 <div class="row gy-2" id="newTaskRow">
                     <div class="col">
-                        <NewTaskComponent TaskBoardId="@TaskBoard.Id" ExitNewTask="() => InNewTaskMode = false"/>
+                        <NewTaskComponent TaskBoardId="@TaskBoard.Id" OnCreated="HandleTaskCreated" OnCanceled="() => InNewTaskMode = false" />
                     </div>
                 </div>
             }
-            else if(!TaskManager.IsUsingFilter)
+            else if (!SearchTasksService.IsSearching)
             {
                 <div class="row gy-2">
                     <div class="col d-grid">
@@ -51,11 +54,11 @@
                 </div>
             }
 
-            @foreach (var task in TaskBoard.Tasks)
+            @foreach (var task in Tasks)
             {
                 <div class="row mt-2">
                     <div class="col">
-                        <TaskComponent Task="@task"/>
+                        <TaskComponent Task="@task" OnDeleted="RemoveTask" />
                     </div>
                 </div>
             }
@@ -71,6 +74,11 @@
     [Parameter]
     public TaskBoardDto? TaskBoard { get; set; }
 
+    [Parameter]
+    public EventCallback<int> OnDeleted { get; set; }
+
+    private List<TaskDto> Tasks { get; set; } = new();
+
     private bool InNewTaskMode { get; set; } = false;
 
     private bool IsDeleteButtonVisible { get; set; }
@@ -79,9 +87,27 @@
 
     private IDragDropHandler dropHandler { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         dropHandler = new DropHandler(DropTask, "task");
+        SearchTasksService.Notify += OnSearchAsync;
+
+        if (TaskBoard is not null)
+            Tasks = await TaskService.GetTasksForBoardAsync(TaskBoard.Id);
+
+    }
+
+    public void Dispose()
+    {
+        SearchTasksService.Notify -= OnSearchAsync;
+    }
+
+    private async Task OnSearchAsync(string searchBy)
+    {
+        if (TaskBoard is not null)
+            Tasks = await TaskService.GetTasksForBoardAsync(TaskBoard.Id, searchBy);
+
+        StateHasChanged();
     }
 
     private void EnterNewTaskMode()
@@ -98,8 +124,9 @@
     {
         if (TaskBoard is null)
             return;
-        
-        await TaskManager.RemoveTaskBoardAsync(TaskBoard);
+
+        await TaskBoardService.DeleteTaskBoardAsync(TaskBoard);
+        await OnDeleted.InvokeAsync(TaskBoard.Id);
     }
 
     private async Task DropTask(object payLoad)
@@ -108,8 +135,27 @@
             return;
 
         // Update task
-        task.TaskBoardId = TaskBoard.Id;
-        await TaskManager.UpdateTaskAsync(task);
+        // task.TaskBoardId = TaskBoard.Id;
+        // await SearchTasksService.UpdateTaskAsync(task);
+    }
+
+    private void HandleTaskCreated(TaskDto task)
+    {
+        InNewTaskMode = false;
+        AddTask(task);
+    }
+
+    private void AddTask(TaskDto task)
+    {
+        Tasks.Add(task);
+    }
+
+    private void RemoveTask(int taskId)
+    {
+        var task = Tasks.FirstOrDefault(x => x.Id == taskId);
+
+        if (task is not null)
+            Tasks.Remove(task);
     }
 
 

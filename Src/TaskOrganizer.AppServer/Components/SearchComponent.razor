@@ -1,0 +1,17 @@
+﻿@using TaskOrganizer.AppServer.Services
+@inject ISearchTasksService SearchTasksService;
+
+<input class="form-control"
+       type="search"
+       @oninput="HandleSearchAsync"
+       placeholder="Search..." />
+
+@code {
+    private async System.Threading.Tasks.Task HandleSearchAsync(ChangeEventArgs args)
+    {
+        if (args.Value is string searchingBy)
+        {
+            await SearchTasksService.SearchAsync(searchingBy);
+        }
+    }
+}

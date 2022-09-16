@@ -7,15 +7,15 @@
         /// </summary>
         /// <param name="name">The name of the task.</param>
         /// <param name="description">The task description.</param>
-        /// <param name="boardId">The ID of the <see cref="TaskBoardDto"/> it belongs to.</param>
-        /// <returns><see cref="TaskBoardDto"/></returns>
-        public TaskDto Create(string name, string description, int boardId);
+        /// <param name="taskBoardId">The task board id.</param>
+        /// <returns><see cref="TaskDto"/></returns>
+        public TaskDto Create(string name, string description, int taskBoardId);
 
         /// <summary>
         /// Creates a new empty task.
         /// </summary>
-        /// <param name="boardId">The ID of the <see cref="TaskBoardDto"/> it belongs to.</param>
+        /// <param name="taskBoardId">The task board id.</param>
         /// <returns><see cref="TaskDto"/></returns>
-        public TaskDto Create(int boardId);
+        public TaskDto Create(int taskBoard);
     }
 }

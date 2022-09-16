@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace TaskOrganizer.Shared
 {
@@ -11,7 +12,5 @@ namespace TaskOrganizer.Shared
         [Required]
         [StringLength(50, MinimumLength = 1)]
         public string Name { get; set; } = string.Empty;
-
-        public List<TaskDto> Tasks { get; set; } = new List<TaskDto>();
     }
 }

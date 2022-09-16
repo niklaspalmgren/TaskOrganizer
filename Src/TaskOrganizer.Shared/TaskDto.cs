@@ -19,6 +19,8 @@ namespace TaskOrganizer.Shared
 
         [Required]
         public int TaskBoardId { get; set; }
-        
+
+        public int? UserId { get; set; }
+
     }
 }

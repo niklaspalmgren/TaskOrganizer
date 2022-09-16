@@ -1,7 +1,8 @@
-﻿@using TaskOrganizer.Shared
+﻿@using TaskOrganizer.AppServer.Services
+@using TaskOrganizer.Shared
 @using TaskOrganizer.Shared.Factories
+@inject ITaskService TaskService;
 @inject ITaskFactory TaskFactory;
-@inject ITaskManager TaskManager;
 
 <div class="card task shadow">
     <div class="card-body">
@@ -56,7 +57,10 @@
     public int TaskBoardId { get; set; }
 
     [Parameter]
-    public EventCallback ExitNewTask { get; set; }
+    public EventCallback<TaskDto> OnCreated { get; set; }
+
+    [Parameter]
+    public EventCallback OnCanceled { get; set; }
 
     private TaskDto? Task { get; set; }
 
@@ -68,7 +72,7 @@
 
     private async Task CancelAsync()
     {
-        await ExitNewTask.InvokeAsync();
+        await OnCanceled.InvokeAsync();
     }
 
     private async Task CreateTaskAsync()
@@ -76,8 +80,8 @@
         if (Task is null)
             return;
 
-        await TaskManager.AddTaskAsync(Task);
-        await ExitNewTask.InvokeAsync();
+        var createdTask = await TaskService.CreateTaskAsync(Task);
+        await OnCreated.InvokeAsync(createdTask);
     }
 
 }

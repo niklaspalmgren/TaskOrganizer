@@ -1,0 +1,36 @@
+﻿@using TaskOrganizer.AppServer.Services
+@using TaskOrganizer.Shared
+@inject IUserService UserService;
+
+@if (User is not null)
+{
+    <small class="text-muted">@User.FullName</small>
+}
+else if(IsLoading) 
+{
+    <small class="placeholder-glow"></small>
+}
+
+@code {
+    [Parameter]
+    public int? UserId { get; set; }
+
+    private UserDto? User { get; set; }
+
+    private bool IsLoading { get; set; }
+
+    protected async override System.Threading.Tasks.Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        if (UserId is int id)
+            await LoadUserData(id);
+    }
+
+    private async System.Threading.Tasks.Task LoadUserData(int userId)
+    {
+        IsLoading = true;
+        User = await UserService.GetUserAsync(userId);
+        IsLoading = false;
+    }
+}

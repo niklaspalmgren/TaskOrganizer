@@ -2,7 +2,7 @@
 @using TaskOrganizer.Shared
 @using TaskOrganizer.Shared.Factories
 @using System.Globalization
-@inject ITaskManager TaskManager;
+@inject ITaskBoardService TaskBoardService;
 @inject ITaskBoardFactory TaskBoardFactory;
 
 
@@ -14,21 +14,25 @@
 
 @code
 {
+    [Parameter]
+    public EventCallback<TaskBoardDto> OnCreated { get; set; }
+
     private async Task CreateNewTaskBoardAsync()
     {
         var newTaskBoard = TaskBoardFactory.Create("Click to rename");
-        
-        var taskBoardNames = TaskManager.TaskBoards.Select(x => x.Name).ToArray();
 
-        foreach (var boardName in taskBoardNames)
+        var taskBoards = await TaskBoardService.GetTaskBoardsAsync();
+
+        foreach (var board in taskBoards)
         {
-            if (!NameEndsWithSequenceNumber(boardName))
+            if (!NameEndsWithSequenceNumber(board.Name))
                 continue;
-            
-            newTaskBoard.Name = FormatTaskBoardName(boardName);
+
+            newTaskBoard.Name = FormatTaskBoardName(board.Name);
         }
-        
-        await TaskManager.AddTaskBoardAsync(newTaskBoard);
+
+        var createdTaskboard = await TaskBoardService.CreateTaskBoardAsync(newTaskBoard);
+        await OnCreated.InvokeAsync(createdTaskboard);
     }
 
     private bool NameEndsWithSequenceNumber(string name)

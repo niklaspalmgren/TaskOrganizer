@@ -1,7 +1,9 @@
 ﻿@using TaskOrganizer.AppServer.Services
 @using TaskOrganizer.Shared
 @inject NavigationManager NavigationManager
-@inject ITaskManager TaskManager;
+@inject ITaskService TaskService;
+@inject ITaskBoardService TaskBoardService;
+@inject IUserService UserService;
 
 @if (Task is null)
 {
@@ -10,21 +12,21 @@
 else
 {
     <EditForm Model="@Task"
-              OnValidSubmit="@UpdateTaskAsync">
+          OnValidSubmit="@UpdateTaskAsync">
 
-        <DataAnnotationsValidator/>
-        <ValidationSummary/>
+        <DataAnnotationsValidator />
+        <ValidationSummary />
 
         <div class="row g-2">
             <div class="col-12">
                 <label class="form-label-sm">Name</label>
-                <InputText @ref="@NameTextInput" @bind-Value="Task.Name" class="form-control form-control-sm"/>
+                <InputText @ref="@NameTextInput" @bind-Value="Task.Name" class="form-control form-control-sm" />
             </div>
 
             <div class="col-6">
                 <label class="form-label-sm">Board</label>
                 <InputSelect @bind-Value="Task.TaskBoardId" class="form-control form-select-sm">
-                    @foreach (var board in TaskManager.TaskBoards)
+                    @foreach (var board in TaskBoards)
                     {
                         <option value="@board.Id">@board.Name</option>
                     }
@@ -41,8 +43,19 @@ else
             </div>
 
             <div class="col-12">
+                <label class="form-label-sm">Assigned To</label>
+                <InputSelect @bind-Value="Task.UserId" class="form-select form-select-sm">
+                    <option value="">Unassigned</option>
+                    @foreach (var user in Users)
+                    {
+                        <option value="@user.Id">@user.FullName</option>
+                    }
+                </InputSelect>
+            </div>
+
+            <div class="col-12">
                 <label class="form-label-sm">Description</label>
-                <InputTextArea @bind-Value="Task.Description" class="form-control form-control-sm"/>
+                <InputTextArea @bind-Value="Task.Description" class="form-control form-control-sm" />
             </div>
 
             <div class="col-12">
@@ -68,14 +81,31 @@ else
     public TaskDto? Task { get; set; }
 
     [Parameter]
-    public EventCallback OnExitEdit { get; set; }
+    public EventCallback OnUpdated { get; set; }
+
+    [Parameter]
+    public EventCallback OnCanceled { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnDeleted { get; set; }    
 
     private InputText? NameTextInput { get; set; }
+    private List<UserDto> Users { get; set; } = new();
+    private List<TaskBoardDto> TaskBoards { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
+        var setFocusTask = SetFocusToNameTextInputAsync();
+        var loadUsersTask = UserService.GetUsersAsync();
+        var loadTaskBoardsTask = TaskBoardService.GetTaskBoardsAsync();
+
+        await System.Threading.Tasks.Task.WhenAll(setFocusTask, loadTaskBoardsTask, loadUsersTask);
+
+        Users = loadUsersTask.Result;
+        TaskBoards = loadTaskBoardsTask.Result;
+
         await base.OnInitializedAsync();
-        await SetFocusToNameTextInputAsync();
+        
     }
 
     private async Task SetFocusToNameTextInputAsync()
@@ -91,8 +121,8 @@ else
         if (Task is null)
             return;
 
-        await TaskManager.UpdateTaskAsync(Task);
-        await OnExitEdit.InvokeAsync();
+        await TaskService.UpdateTaskAsync(Task);
+        await OnUpdated.InvokeAsync(Task);
     }
 
     private async Task DeleteTaskAsync()
@@ -100,13 +130,13 @@ else
         if (Task is null)
             return;
 
-        await TaskManager.RemoveTaskAsync(Task);
-        await OnExitEdit.InvokeAsync();
+        await TaskService.DeleteTaskAsync(Task);
+        await OnDeleted.InvokeAsync(Task.Id);
     }
 
     private async Task CancelEditAsync()
     {
-        await OnExitEdit.InvokeAsync();
+        await OnCanceled.InvokeAsync();
     }
 
 }

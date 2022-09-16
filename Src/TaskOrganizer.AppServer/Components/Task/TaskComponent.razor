@@ -1,14 +1,17 @@
 ﻿@using TaskOrganizer.AppServer.DragDrop
 @using TaskOrganizer.Shared
 @using TaskOrganizer.AppServer.Services
-@inject ITaskManager TaskManager;
 @inject IDragDropService dragDropService;
+@inject IUserService UserService;
 
 @if (InEditMode)
 {
     <div class="card task">
         <div class="card-body">
-            <EditTaskComponent Task="@Task" OnExitEdit="() => InEditMode = false"/>
+            <EditTaskComponent Task="@Task"
+                           OnUpdated="() => InEditMode = false"
+                           OnCanceled="() => InEditMode = false"
+                           OnDeleted="HandleTaskDeletedAsync" />
         </div>
     </div>
 }
@@ -16,11 +19,27 @@ else
 {
     <DraggableComponent DragHandler="@dragHandler">
         <div class="card task"
-             @onclick="() => InEditMode = true">
+         @onclick="() => InEditMode = true">
             <div class="card-body">
-                <h5 class="card-title">@Task.Name</h5>
+                <h5 class="card-title text-truncate">@Task.Name</h5>
                 <p class="card-text text-muted">@Task.Description</p>
-                <p class="badge @BadgeBgClass">@Task.Category</p>
+
+                <div class="row card-text">
+                    <div class="col">
+                        <span class="badge @BadgeBgClass">@Task.Category</span>
+                    </div>
+                    <div class="col text-end">
+                        @if (Task.UserId is not null)
+                        {
+                            <UserNameComponent UserId="@Task.UserId" />
+                        }
+                    </div>
+
+                </div>
+                <div class="card-text">
+                </div>
+
+
             </div>
         </div>
     </DraggableComponent>
@@ -34,7 +53,7 @@ else
     public TaskDto? Task { get; set; }
 
     [Parameter]
-    public EventCallback<TaskDto> OnDeleted { get; set; }
+    public EventCallback<int> OnDeleted { get; set; }
 
     [Parameter]
     public EventCallback<TaskDto> OnTaskChangedBoard { get; set; }
@@ -45,10 +64,16 @@ else
 
     private IDragDropHandler dragHandler { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         dragHandler = new DragHandler(DropTask, Task, "task");
-        base.OnInitialized();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task HandleTaskDeletedAsync(int id)
+    {
+        InEditMode = false;
+        await OnDeleted.InvokeAsync(id);
     }
 
     private async Task DropTask(object payLoad)
@@ -56,18 +81,22 @@ else
         if (payLoad is not TaskDto task)
             return;
 
-        await OnDeleted.InvokeAsync(task);
+        await OnDeleted.InvokeAsync(task.Id);
     }
 
-    private string GetBadgeBg(TaskDto task)
+    private string GetBadgeBg(TaskDto? task)
     {
+        if (task is null)
+            return string.Empty;
+
+
         return task.Category switch
         {
             TaskCategory.Bug => "bg-danger",
             TaskCategory.Feature => "bg-warning",
             TaskCategory.ChangeRequest => "bg-purple",
             _ => throw new ArgumentOutOfRangeException()
-            };
+        };
     }
-    
-    } 
+
+}

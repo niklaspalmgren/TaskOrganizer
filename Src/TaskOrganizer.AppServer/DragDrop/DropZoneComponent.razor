@@ -2,7 +2,7 @@
 @inject IDragDropService DragAndDropService
 
 <div ondragover="event.preventDefault()"
-     class="@dropZoneClass"
+     class="@dropZoneClass mb-4 shadow"
      @ondrop="@OnDropAsync"
      @ondragenter="@OnDragEnter"
      @ondragleave="@OnDragLeave">

@@ -22,11 +22,11 @@ public class TasksController : ControllerBase
 
 
     [HttpGet]
-    public async Task<ActionResult<List<TaskDto>>> GetTasks()
+    public async Task<ActionResult<List<TaskDto>>> GetTasks([FromQuery] int? taskBoardId, [FromQuery] string? filter)
     {
-        var tasksFromRepo = await _taskRepo.GetTasksAsync();
+        var tasksFromRepo = await _taskRepo.GetTasksAsync(taskBoardId, filter);
 
-        if (tasksFromRepo == null || !tasksFromRepo.Any())
+        if (tasksFromRepo is null || !tasksFromRepo.Any())
             return NotFound();
 
         var taskDtos = _mapper.Map<List<Entities.Task>, List<TaskDto>>(tasksFromRepo);
@@ -52,7 +52,7 @@ public class TasksController : ControllerBase
     {
         var task = _mapper.Map<Entities.Task>(dto);
 
-        _taskRepo.CreateTask(task);
+        _taskRepo.AddTask(task);
         await _taskRepo.SaveChangesAsync();
 
         var taskDto = _mapper.Map<TaskDto>(task);

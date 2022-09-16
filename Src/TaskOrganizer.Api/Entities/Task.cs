@@ -17,9 +17,11 @@ public class Task
     public string Description { get; set; } = string.Empty;
     
     [Required]
-    public  int Category { get; set; }
+    public int Category { get; set; }
 
     [Required]
     public int TaskBoardId { get; set; }
+    
+    public int? UserId { get; set; } 
 
 }

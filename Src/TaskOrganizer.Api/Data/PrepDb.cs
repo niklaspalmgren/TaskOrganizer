@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskOrganizer.Api.Entities;
+using Task = TaskOrganizer.Api.Entities.Task;
 
 namespace TaskOrganizer.Api.Data
 {
@@ -25,15 +26,35 @@ namespace TaskOrganizer.Api.Data
 
         public static void SeedData(TasksDb context)
         {
+            if (!context.Users.Any())
+            {
+                var users = new List<User>()
+                {
+                    new()
+                    {
+                        FirstName = "Niklas",
+                        LastName = "Palmgren"
+                    },
+                    new()
+                    {
+                        FirstName = "Martin",
+                        LastName = "Fast"
+                    }
+                };
+
+                context.Users.AddRange(users);
+                context.SaveChanges();
+            }
+            
             if (!context.TaskBoards.Any())
             {
                 var taskBoards = new List<TaskBoard>()
                     {
-                        new TaskBoard()
+                        new()
                         {
                             Name = "Backlog"
                         },
-                        new TaskBoard()
+                        new()
                         {
                             Name = "Ideas"
                         }
@@ -46,43 +67,44 @@ namespace TaskOrganizer.Api.Data
             if (!context.Tasks.Any())
             {
 
-                var taskBoards = context.TaskBoards;
+                var taskBoards = context.TaskBoards.ToList();
+                var users = context.Users.ToList();
 
-                if (taskBoards != null && taskBoards.Any())
+                if (!taskBoards.Any()) 
+                    return;
+                
+                foreach (var taskBoard in taskBoards)
                 {
-                    foreach (var taskBoard in taskBoards)
+                    switch (taskBoard.Name)
                     {
-                        switch (taskBoard.Name)
-                        {
-                            case "Backlog":
-                                SeedBacklogTasks(taskBoard);
-                                break;
-                            case "Ideas":
-                                SeedIdeasTasks(taskBoard);
-                                break;
-                            default:
-                                continue;
+                        case "Backlog":
+                            SeedBacklogTasks(taskBoard, users.FirstOrDefault());
+                            break;
+                        case "Ideas":
+                            SeedIdeasTasks(taskBoard, users.FirstOrDefault());
+                            break;
+                        default:
+                            continue;
 
-                        }
                     }
-                    context.SaveChanges();
                 }
+                context.SaveChanges();
 
 
             }
         }
 
-        private static void SeedIdeasTasks(TaskBoard taskBoard)
+        private static void SeedIdeasTasks(TaskBoard taskBoard, User user)
         {
             var tasks = new List<Entities.Task>()
                     {
-                        new Entities.Task()
+                        new()
                         {
                             Name = "Drag drop",
                             Description = "Move tasks between task boards using drag and drop operations.",
-                            TaskBoardId = taskBoard.Id,
+                            TaskBoardId = taskBoard.Id
                         },
-                        new Entities.Task()
+                        new()
                         {
                             Name = "User confirmation dialogs",
                             Description = "Confirmation dialogs to confirm deletion of tasks- and task boards.",
@@ -93,24 +115,24 @@ namespace TaskOrganizer.Api.Data
             taskBoard.Tasks = tasks;
         }
 
-        private static void SeedBacklogTasks(TaskBoard taskBoard)
+        private static void SeedBacklogTasks(TaskBoard taskBoard, User user)
         {
             var tasks = new List<Entities.Task>()
                     {
-                        new Entities.Task()
+                        new()
                         {
                             Name = "Docker HTTPS Support",
                             Description = "Add support for https when the apps are run in docker containers.",
-                            TaskBoardId = taskBoard.Id,
+                            TaskBoardId = taskBoard.Id
                         },
-                        new Entities.Task()
+                        new()
                         {
                             Name = "Patching",
                             Description = "Update the controllers to support patching. PUT is now the only option to update entities.",
                             TaskBoardId = taskBoard.Id
                         },
 
-                        new Entities.Task()
+                        new()
                         {
                             Name = "Improve error handling",
                             Description = "Add exception filters that can be used by the exception handler to give a better response to the client.",

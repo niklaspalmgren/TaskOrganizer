@@ -1,5 +1,6 @@
-﻿@using TaskOrganizer.Shared
-@inject ITaskManager TaskManager;
+﻿@using TaskOrganizer.AppServer.Services
+@using TaskOrganizer.Shared
+@inject ITaskBoardService TaskBoardService;
 
 @if (TaskBoard is not null)
 {
@@ -53,7 +54,7 @@
         if (TaskBoard is null)
             return;
         
-        await TaskManager.UpdateTaskBoardAsync(TaskBoard);
+        await TaskBoardService.UpdateTaskBoardAsync(TaskBoard);
 
         HasUpdated = true;
         

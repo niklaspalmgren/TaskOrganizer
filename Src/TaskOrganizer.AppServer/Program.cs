@@ -9,25 +9,12 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddLogging(opt => opt.AddConsole());
 
-// Http client configurations
-builder.Services.AddHttpClient("default", c =>
-{
-    c.BaseAddress = new Uri(builder.Configuration.GetValue<string>("ApiBaseUri"));
-});
+builder.Services.AddHttpClients(builder.Configuration);
 
-builder.Services.AddHttpClient("Tasks", c =>
-{
-    c.BaseAddress = new Uri(builder.Configuration.GetValue<string>("TasksApiBaseUri"));
-});
-
-builder.Services.AddHttpClient("TaskBoards", c =>
-{
-    c.BaseAddress = new Uri(builder.Configuration.GetValue<string>("TaskBoardsApiBaseUri"));
-});
-
-builder.Services.AddScoped<ITaskManager, TaskManager>();
+builder.Services.AddSingleton<ISearchTasksService, SearchTasksService>();
 builder.Services.AddSingleton<IDragDropService, DragDropService>();
 builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITaskBoardService, TaskBoardService>();
 builder.Services.AddScoped<ITaskBoardFactory, TaskBoardFactory>();
 builder.Services.AddScoped<ITaskFactory, TaskOrganizer.Shared.Factories.TaskFactory>();

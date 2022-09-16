@@ -13,7 +13,6 @@ namespace TaskOrganizer.Api.Entities
         [MaxLength(50)]
         public string Name { get; set; } = string.Empty;
 
-        [ForeignKey("TaskBoardId")]
         public ICollection<Task> Tasks { get; set; } = new List<Task>();
     }
 }

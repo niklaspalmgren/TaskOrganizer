@@ -2,37 +2,35 @@
 @using TaskOrganizer.AppServer.Services
 @using TaskOrganizer.Shared
 @using TaskOrganizer.AppServer.Shared
-@inject ITaskManager TaskManager;
+@inject ITaskBoardService TaskBoardService;
 
-@if (TaskManager.TaskBoards.Count == 0)
+@if (TaskBoards.Count == 0)
 {
-    <p><em>Loading...</em></p>
+    <p>
+        <em>Loading...</em>
+    </p>
 }
 else
 {
-
     <div class="row mb-4">
         <div class="col-auto color-purple">
             <h3>Task Manager</h3>
         </div>
 
         <div class="col-auto">
-            <NewTaskBoardComponent />
+            <NewTaskBoardComponent OnCreated="AddTaskBoard"/>
         </div>
 
         <div class="col-auto">
-            <input class="form-control form-control-sm"
-               value="@TaskManager.FilterString"
-               @oninput="HandleSearch"
-               placeholder="Search" />
+            <SearchComponent/>
         </div>
     </div>
 
     <div class="row mb-4">
-        @foreach (var board in TaskManager.TaskBoards)
+        @foreach (var board in TaskBoards)
         {
             <div class="col-xxl-2 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                <TaskBoardComponent TaskBoard="@board" />
+                <TaskBoardComponent TaskBoard="@board" OnDeleted="RemoveTaskBoard"/>
 
             </div>
         }
@@ -40,31 +38,27 @@ else
 }
 
 @code {
-    
+
+    private List<TaskBoardDto> TaskBoards { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadTasksAsync();
-        TaskManager.OnChange += StateHasChanged;
+        TaskBoards = await TaskBoardService.GetTaskBoardsAsync();
     }
 
-    public void Dispose()
+    private void AddTaskBoard(TaskBoardDto taskBoard)
     {
-        TaskManager.OnChange -= StateHasChanged;
+        TaskBoards.Add(taskBoard);
     }
 
-    private async Task HandleSearch(ChangeEventArgs args)
+    private void RemoveTaskBoard(int id)
     {
-        if (args.Value is null)
+        var board = TaskBoards.FirstOrDefault(x => x.Id == id);
+
+        if (board is null)
             return;
 
-        TaskManager.FilterString = args.Value.ToString();
-
-        await LoadTasksAsync(TaskManager.FilterString);
+        TaskBoards.Remove(board);
     }
 
-    private async Task LoadTasksAsync(string filter = "")
-    {
-        await TaskManager.LoadTaskBoardsAsync(filter);
-    }
 }

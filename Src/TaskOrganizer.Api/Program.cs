@@ -10,6 +10,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddHealthChecks();
 builder.Services.AddScoped<ITaskRepo, TaskRepo>();
 builder.Services.AddScoped<ITaskBoardRepo, TaskBoardRepo>();
+builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddDbContext<TasksDb>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));

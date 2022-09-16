@@ -13,15 +13,10 @@ namespace TaskOrganizer.Api.Services
             _context = context;
         }
 
-        public async Task<List<TaskBoard>> GetTaskBoardsAsync(string filter)
+        public async Task<List<TaskBoard>> GetTaskBoardsAsync()
         {
-            var queryable = _context.TaskBoards.AsQueryable<TaskBoard>();
-
-            queryable = AddFilterToQueryable(filter, queryable);
-
-            var tasks = await queryable.ToListAsync();
-
-            return tasks;
+            var taskBoards = await _context.TaskBoards.ToListAsync();
+            return taskBoards;
         }
 
         private static IQueryable<TaskBoard> AddFilterToQueryable(string filter, IQueryable<TaskBoard> queryable)
@@ -29,7 +24,9 @@ namespace TaskOrganizer.Api.Services
 
             if (!string.IsNullOrWhiteSpace(filter))
             {
-                queryable = queryable.Include(x => x.Tasks.Where(y => y.Name.Contains(filter) || y.Description.Contains(filter)));
+                queryable = queryable
+                    .Include(x => x.Tasks
+                        .Where(y => y.Name.Contains(filter) || y.Description.Contains(filter)));
             }
             else
             {
@@ -41,13 +38,11 @@ namespace TaskOrganizer.Api.Services
 
         public async Task<TaskBoard?> GetTaskBoardByIdAsync(int id)
         {
-            var taskBoard = await _context.TaskBoards
-                .Include(x => x.Tasks)
-                .FirstOrDefaultAsync(x => x.Id == id);
+            var taskBoard = await _context.TaskBoards.FindAsync(id);
             return taskBoard;
         }
 
-        public void CreateTaskBoard(TaskBoard taskBoard)
+        public void AddTaskBoard(TaskBoard taskBoard)
         {
             if (taskBoard == null)
                 throw new ArgumentNullException(nameof(taskBoard));
