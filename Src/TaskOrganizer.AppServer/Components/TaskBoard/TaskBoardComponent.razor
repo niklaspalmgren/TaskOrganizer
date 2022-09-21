@@ -13,7 +13,7 @@
     <DropZoneComponent DropHandler="@dropHandler">
         <div class="task-board tm-bg-accent rounded-2 p-2">
             <div class="row">
-                <div class="col">
+                <div class="col task-board-header">
                     @if (InEditMode)
                     {
                         <EditTaskBoardComponent TaskBoard="@TaskBoard" OnExitEditMode="() => InEditMode = false" />
@@ -29,37 +29,19 @@
                 </div>
                 @if (!InEditMode)
                 {
-                    <div class="col-auto">
+                    <div class="col-auto task-board-header">
                         <i class="fs-6 bi bi-trash delete-taskboard-button cursor-hand" @onclick="DeleteTaskBoardAsync"></i>
                     </div>
                 }
-            </div>
-            <div class="row mb-2">
-                <div class="col">
+
+                <div class="col-12">
                     <small class="text-light" data-toggle="tooltip" data-placement="bottom" title="@CompletedTasksCount of @Tasks.Count tasks completed.">
                         @CompletedTasksCount/@Tasks.Count
                     </small>
                 </div>
             </div>
 
-            @if (InNewTaskMode)
-            {
-                <div class="row gy-2" id="newTaskRow">
-                    <div class="col">
-                        <NewTaskComponent TaskBoardId="@TaskBoard.Id" OnCreated="HandleTaskCreated" OnCanceled="() => InNewTaskMode = false" />
-                    </div>
-                </div>
-            }
-            else if (!SearchTasksService.IsSearching)
-            {
-                <div class="row gy-2">
-                    <div class="col d-grid">
-                        <button class="btn btn-light" @onclick="@EnterNewTaskMode">
-                            <i class="bi bi-plus-lg"></i> Add Task
-                        </button>
-                    </div>
-                </div>
-            }
+            
 
             @foreach (var task in Tasks)
             {
@@ -69,6 +51,26 @@
                     </div>
                 </div>
             }
+
+            @if (InNewTaskMode)
+            {
+                <div class="row mt-2" id="newTaskRow">
+                    <div class="col">
+                        <NewTaskComponent TaskBoardId="@TaskBoard.Id" OnCreated="HandleTaskCreated" OnCanceled="() => InNewTaskMode = false" />
+                    </div>
+                </div>
+            }
+            else if (!SearchTasksService.IsSearching)
+            {
+                <div class="row mt-2">
+                    <div class="col d-grid">
+                        <button class="btn btn-sm btn-outline-light border-0 text-start" @onclick="@EnterNewTaskMode">
+                            <i class="bi bi-plus-lg"></i> Add Task
+                        </button>
+                    </div>
+                </div>
+            }
+
         </div>
 
     </DropZoneComponent>

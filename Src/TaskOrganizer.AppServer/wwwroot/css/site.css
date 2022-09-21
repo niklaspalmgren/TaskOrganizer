@@ -46,6 +46,10 @@ a, .btn-link {
     border-color: #fff;
 }
 
+.task-board-header {
+    height: 30px;
+}
+
 .task-board-name {
     color: #fff;
     cursor: pointer;
@@ -72,11 +76,6 @@ a, .btn-link {
     color: #fff;
     background-color: #47006c;
     border-color: #47006c;
-}
-
-.btn-outline-light {
-    color: #736e89;
-    border-color: #736e89;
 }
 
 .navbar-brand {
