@@ -1,11 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using TaskOrganizer.Api.Attributes;
 using TaskOrganizer.Api.Data;
 using TaskOrganizer.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers(options => options.Filters.Add<LogRequestTimeFilterAttribute>());
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddHealthChecks();
 builder.Services.AddScoped<ITaskRepo, TaskRepo>();
