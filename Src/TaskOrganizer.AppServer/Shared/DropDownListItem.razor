@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+
+@if (IsSeparator)
+{
+    <li><hr class="dropdown-divider"></li>
+}
+else 
+{
+    <li><button class="dropdown-item" type="button" @onclick="HandleClickAsync">@ChildContent</button></li>
+}
+
+
+@code {
+    [CascadingParameter(Name = "Dropdown")]
+    public DropDown? Dropdown { get; set; }
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    [Parameter]
+    public bool IsSeparator { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    public async Task HandleClickAsync()
+    {
+        if (Dropdown is not null)
+            Dropdown.Show = false;
+        
+        await OnClick.InvokeAsync();
+    }
+}

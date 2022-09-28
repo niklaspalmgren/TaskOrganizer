@@ -78,6 +78,28 @@ public class TasksController : ControllerBase
         return NoContent();
     }
 
+    [HttpPut]
+    public async Task<ActionResult> UpdateTasks(List<TaskDto> dtos)
+    {
+        if (dtos is null || !dtos.Any())
+            return BadRequest();
+
+        foreach (var dto in dtos)
+        {
+            var taskFromRepo = await _taskRepo.GetTaskByIdAsync(dto.Id);
+
+            if (taskFromRepo is null)
+                continue;
+
+            // Updates our entity from db context with values from our incomming dto
+            _mapper.Map(dto, taskFromRepo);
+        }
+
+        await _taskRepo.SaveChangesAsync();
+
+        return NoContent();
+    }
+
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteTask(int id)

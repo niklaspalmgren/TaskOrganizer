@@ -80,6 +80,12 @@ namespace TaskOrganizer.AppServer.Services
             await httpClient.PutAsJsonAsync(uri, taskDto);
         }
 
+        public async Task UpdateTasksAsync(List<TaskDto> taskDtos)
+        {
+            var httpClient = _clientFactory.CreateClient(_httpClientName);
+            await httpClient.PutAsJsonAsync(string.Empty, taskDtos);
+        }
+
         public async Task DeleteTaskAsync(TaskDto taskDto)
         {
             var httpClient = _clientFactory.CreateClient(_httpClientName);

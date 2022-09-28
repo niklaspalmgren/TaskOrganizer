@@ -9,6 +9,7 @@ namespace TaskOrganizer.AppServer.Services
         Task<TaskDto> GetTask(int id);
         Task<TaskDto> CreateTaskAsync(TaskDto taskDto);
         Task UpdateTaskAsync(TaskDto taskDto);
+        Task UpdateTasksAsync(List<TaskDto> taskDtos);
         Task DeleteTaskAsync(TaskDto taskDto);
         
     }

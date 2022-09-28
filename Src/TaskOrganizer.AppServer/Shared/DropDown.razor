@@ -1,0 +1,50 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+
+<div class="dropdown">
+
+    <button @onclick="Toggle"
+            @onblur="ToggleIfMouseIsOut"
+            class="border-0 rounded-2 bg-transparent"
+            type="button"
+            id="dropdownMenuButton"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false">
+        <i class="bi bi-three-dots text-light" />
+    </button>
+
+    <CascadingValue name="Dropdown" Value="@this">
+        <ul class="dropdown-menu dropdown-menu-end @(Show? "show":"")"
+            @onmousemove="() => isMouseOverDropDownContent = true"
+            @onmouseout="() => isMouseOverDropDownContent = false">
+            @ChildContent
+        </ul>
+    </CascadingValue>
+
+
+
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    public bool Show { get; set; }
+
+    private bool isMouseOverDropDownContent;
+
+    private void Toggle()
+    {
+        Show = !Show;
+        StateHasChanged();
+    }
+
+    private void ToggleIfMouseIsOut()
+    {
+        if (isMouseOverDropDownContent)
+            return;
+
+        Show = !Show;
+        StateHasChanged();
+    }
+}

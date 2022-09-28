@@ -20,6 +20,9 @@ public class Task
     public int Category { get; set; }
 
     [Required]
+    public int Order { get; set; }
+
+    [Required]
     public bool IsCompleted  { get; set; }
 
     [Required]

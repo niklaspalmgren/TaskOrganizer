@@ -15,6 +15,6 @@ public class User
     [Required] 
     public string LastName { get; set; } = string.Empty;
 
-    public ICollection<Task> Tasks { get; set; }
+    public ICollection<Task>? Tasks { get; set; }
 
 }

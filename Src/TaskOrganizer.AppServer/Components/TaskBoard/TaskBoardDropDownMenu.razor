@@ -1,0 +1,26 @@
+﻿<div class="btn-group">
+    <button @onclick="Show" @onblur="Hide" class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Small button
+    </button>
+    <ul class="dropdown-menu" @(isActive ? "is-active" : "")>
+        <li><a class="dropdown-item" href="#">Action</a></li>
+        <li><a class="dropdown-item" href="#">Another action</a></li>
+        <li><a class="dropdown-item" href="#">Something else here</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="#">Separated link</a></li>
+    </ul>
+</div>
+
+@code {
+    private bool isActive = false;
+
+    private void Show()
+    {
+        isActive = true;
+    }
+
+    private void Hide()
+    {
+        isActive = false;
+    }
+}

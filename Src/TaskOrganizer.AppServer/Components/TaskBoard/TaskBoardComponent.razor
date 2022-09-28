@@ -29,8 +29,13 @@
                 </div>
                 @if (!InEditMode)
                 {
-                    <div class="col-auto task-board-header">
-                        <i class="fs-6 bi bi-trash delete-taskboard-button cursor-hand" @onclick="DeleteTaskBoardAsync"></i>
+                    <div class="col-auto mx-2">
+                        <DropDown>
+                            <DropDownListItem OnClick="OrderTasksByNameAscAsync">Order by title ascending</DropDownListItem>
+                            <DropDownListItem OnClick="OrderTasksByNameAscDesc">Order by title descending</DropDownListItem>
+                            <DropDownListItem IsSeparator="true" />
+                            <DropDownListItem OnClick="DeleteTaskBoardAsync">Delete</DropDownListItem>
+                        </DropDown>
                     </div>
                 }
 
@@ -41,7 +46,7 @@
                 </div>
             </div>
 
-            
+
 
             @foreach (var task in Tasks)
             {
@@ -173,6 +178,20 @@
     private void EnterTaskBoardEditMode()
     {
         InEditMode = true;
+    }
+
+    private void OrderTasksByNameAscAsync()
+    {
+        var reorderer = new TaskReorderer();
+        Tasks = reorderer.OrderByNameAsc(Tasks);
+        TaskService.UpdateTasksAsync(Tasks);
+    }
+
+    private void OrderTasksByNameAscDesc()
+    {
+        var reorderer = new TaskReorderer();
+        Tasks = reorderer.OrderByNameDesc(Tasks);
+        TaskService.UpdateTasksAsync(Tasks);
     }
 
 }

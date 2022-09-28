@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using TaskOrganizer.Api.Data;
 using TaskOrganizer.Api.Entities;
 
@@ -13,10 +14,10 @@ namespace TaskOrganizer.Api.Services
             _context = context;
         }
 
-        public async Task<List<Entities.Task>> GetTasksAsync(int? taskBoardId, string filter)
+        public async Task<List<Entities.Task>> GetTasksAsync(int? taskBoardId, string? searchString)
         {
             var queryable = _context.Tasks.AsQueryable();
-            queryable = AddFilterToQueryable(queryable, taskBoardId, filter);
+            queryable = AddFilterToQueryable(queryable, taskBoardId, searchString);
 
             var tasks = await queryable.ToListAsync();
             return tasks;
@@ -49,7 +50,7 @@ namespace TaskOrganizer.Api.Services
             await _context.SaveChangesAsync();
         }
 
-        private IQueryable<Entities.Task> AddFilterToQueryable(IQueryable<Entities.Task> queryable, int? taskBoardId, string filter)
+        private IQueryable<Entities.Task> AddFilterToQueryable(IQueryable<Entities.Task> queryable, int? taskBoardId, string? searchString)
         {
             // Filter by task board
             if (taskBoardId is int id)
@@ -58,12 +59,20 @@ namespace TaskOrganizer.Api.Services
             }
 
             // Filter by wild card match
-            if (!string.IsNullOrWhiteSpace(filter))
+            if (!string.IsNullOrWhiteSpace(searchString))
             {
-                queryable = queryable.Where(x => x.Name.Contains(filter) || x.Description.Contains(filter));
+                queryable = queryable.Join(_context.Users, x => x.UserId, u => u.Id, (task, user) => new
+                {
+                    CombinedSearchString = task.Name + task.Description + user.FirstName + user.LastName,
+                    Task = task
+                }).Where(x => x.CombinedSearchString.Contains(searchString)).Select(x => x.Task);
             }
+
+            queryable = queryable.OrderBy(x => x.Order);
 
             return queryable;
         }
+
+
     }
 }

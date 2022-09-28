@@ -4,52 +4,56 @@
 @inject ITaskService TaskService;
 @inject ITaskFactory TaskFactory;
 
-<div class="card task shadow">
-    <div class="card-body">
-        <EditForm Model="@Task" OnValidSubmit="@CreateTaskAsync">
+@if (Task is not null)
+{
+    <div class="card task shadow">
+        <div class="card-body">
+            <EditForm Model="@Task" OnValidSubmit="@CreateTaskAsync">
 
-            <DataAnnotationsValidator/>
-            <ValidationSummary/>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
 
-            <div class="form-group row">
-                <label class="col-form-label-sm">Name</label>
-                <div class="col">
-                    <InputText id="name" @bind-Value="Task.Name" class="form-control form-control-sm"/>
+                <div class="form-group row">
+                    <label class="col-form-label-sm">Name</label>
+                    <div class="col">
+                        <InputText id="name" @bind-Value="Task.Name" class="form-control form-control-sm" />
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group row">
-                <label class="col-form-label-sm">Description</label>
-                <div class="col">
-                    <InputTextArea id="description" @bind-Value="Task.Description" class="form-control form-control-sm"/>
+                <div class="form-group row">
+                    <label class="col-form-label-sm">Description</label>
+                    <div class="col">
+                        <InputTextArea id="description" @bind-Value="Task.Description" class="form-control form-control-sm" />
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group row">
-                <label class="col-form-label-sm">Category</label>
-                <div class="col">
-                    <InputSelect @bind-Value="Task.Category" class="form-select form-select-sm">
-                        <option value="@TaskCategory.Bug">Bug</option>
-                        <option value="@TaskCategory.Feature">Feature</option>
-                        <option value="@TaskCategory.Change">Change</option>
-                    </InputSelect>
+                <div class="form-group row">
+                    <label class="col-form-label-sm">Category</label>
+                    <div class="col">
+                        <InputSelect @bind-Value="Task.Category" class="form-select form-select-sm">
+                            <option value="@TaskCategory.Bug">Bug</option>
+                            <option value="@TaskCategory.Feature">Feature</option>
+                            <option value="@TaskCategory.Change">Change</option>
+                        </InputSelect>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group row mt-4">
-                <div class="col">
-                    <button type="submit" class="btn btn-success form-control form-control-sm">Add Task</button>
+                <div class="form-group row mt-4">
+                    <div class="col">
+                        <button type="submit" class="btn btn-success form-control form-control-sm">Add Task</button>
+                    </div>
+                    <div class="col">
+                        <button type="button" @onclick="@CancelAsync" class="btn btn-outline-secondary form-control form-control-sm">Cancel</button>
+                    </div>
                 </div>
-                <div class="col">
-                    <button type="button" @onclick="@CancelAsync" class="btn btn-outline-secondary form-control form-control-sm">Cancel</button>
-                </div>
-            </div>
 
 
-        </EditForm>
+            </EditForm>
 
+        </div>
     </div>
-</div>
+}
+
 
 @code {
 
