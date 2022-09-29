@@ -1,9 +1,13 @@
-﻿namespace TaskOrganizer.AppServer.Services;
+﻿using System;
+
+namespace TaskOrganizer.AppServer.Services;
 
 public interface ISearchTasksService
 {
-    public event Func<string, Task>? Notify;
-    public string SearchValue { get; }
+    public event Func<SearchTaskEventArgs, Task>? Notify;
+    public string Wildcard { get; } 
+    public int? UserId { get; }
     public bool IsSearching { get; }
-    public Task SearchAsync(string value);
+    public Task SearchAsync(string wildcard, int? userId = null);
+    public Task SearchAsync(int? userId);
 }

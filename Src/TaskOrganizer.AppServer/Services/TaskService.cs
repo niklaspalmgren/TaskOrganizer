@@ -30,7 +30,7 @@ namespace TaskOrganizer.AppServer.Services
             return tasks ?? new List<TaskDto>();
         }
 
-        public async Task<List<TaskDto>> GetTasksForBoardAsync(int taskBoardId, string filter = "")
+        public async Task<List<TaskDto>> GetTasksForBoardAsync(int taskBoardId, int? UserId = null, string filter = "")
         {
             var httpClient = _clientFactory.CreateClient(_httpClientName);
 

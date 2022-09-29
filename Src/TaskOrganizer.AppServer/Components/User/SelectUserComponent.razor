@@ -1,0 +1,35 @@
+﻿@using TaskOrganizer.AppServer.Services
+@using TaskOrganizer.Shared
+@inject IUserService UserService;
+@inject ISearchTasksService SearchTasksService;
+
+
+<select class="form-select border-0"
+        @onchange="HandleSelectionChangedAsync">
+
+    <option>All</option>
+
+    @foreach (var user in _users)
+    {
+        <option value="@user.Id">@user.FullName</option>
+    }
+
+</select>
+
+
+@code {
+    private List<UserDto> _users = new List<UserDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _users = await UserService.GetUsersAsync();
+    }
+
+    private async Task HandleSelectionChangedAsync(ChangeEventArgs args)
+    {
+        if (int.TryParse(args.Value as string, out var id))
+        {
+            await SearchTasksService.SearchAsync(id);
+        }
+    }
+}

@@ -109,7 +109,9 @@
         SearchTasksService.Notify += OnSearchAsync;
 
         if (TaskBoard is not null)
+        {
             Tasks = await TaskService.GetTasksForBoardAsync(TaskBoard.Id);
+        }
 
     }
 
@@ -118,12 +120,14 @@
         SearchTasksService.Notify -= OnSearchAsync;
     }
 
-    private async Task OnSearchAsync(string searchBy)
+    private async Task OnSearchAsync(SearchTaskEventArgs args)
     {
         if (TaskBoard is not null)
-            Tasks = await TaskService.GetTasksForBoardAsync(TaskBoard.Id, searchBy);
-
-        StateHasChanged();
+        {
+            Tasks = await TaskService.GetTasksForBoardAsync(TaskBoard.Id, args.Wildcard);
+            StateHasChanged();
+        }
+            
     }
 
     private void EnterNewTaskMode()

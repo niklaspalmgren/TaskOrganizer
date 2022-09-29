@@ -1,4 +1,5 @@
-﻿@using TaskOrganizer.AppServer.DragDrop
+﻿@using TaskOrganizer.AppServer.Components.User
+@using TaskOrganizer.AppServer.DragDrop
 @using TaskOrganizer.AppServer.Services
 @using TaskOrganizer.Shared
 @using TaskOrganizer.AppServer.Shared
@@ -15,7 +16,7 @@ else
     <div class="col shadow mb-4 tm-bg-accent p-2 rounded-2">
         <div class="row ">
             <div class="col-auto">
-                <img src="/resources/tm-logo.svg" alt="Task Manager" />
+                <img height="38" src="/resources/tm-logo.svg" alt="Task Manager" />
             </div>
 
             <div class="col-auto align-self-center">
@@ -24,6 +25,10 @@ else
 
             <div class="col align-self-center">
                 <SearchComponent />
+            </div>
+
+            <div class="col-auto align-self-center">
+                <SelectUserComponent />
             </div>
         </div>
 
